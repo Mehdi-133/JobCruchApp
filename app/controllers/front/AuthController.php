@@ -14,7 +14,7 @@ class AuthController extends Controller
     public function showRegister()
     {
         $token = Security::getToken();
-        $this->view('auth/register', ['csrf_token' => $token]);
+        $this->view('front/auth/register', ['csrf_token' => $token]);
     }
 
     public function register()
@@ -35,7 +35,7 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             $token = Security::getToken();
-            $this->view('auth/register', [
+            $this->view('front/auth/register', [
                 'errors' => $validator->errors(),
                 'csrf_token' => $token,
                 'old' => $_POST
@@ -62,7 +62,7 @@ class AuthController extends Controller
     public function showLogin()
     {
         $token = Security::getToken();
-        $this->view('auth/login', ['csrf_token' => $token]);
+        $this->view('front/auth/login', ['csrf_token' => $token]);
     }
 
     public function login()
@@ -79,7 +79,7 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             $token = Security::getToken();
-            $this->view('auth/login', [
+            $this->view('front/auth/login', [
                 'errors' => $validator->errors(),
                 'csrf_token' => $token,
                 'old' => $_POST
@@ -88,10 +88,10 @@ class AuthController extends Controller
         }
 
         if (Auth::attempt($_POST['email'], $_POST['password'])) {
-            $this->redirect('dashboard');
+            $this->redirect('jobs');
         } else {
             $token = Security::getToken();
-            $this->view('auth/login', [
+            $this->view('front/auth/login', [
                 'error' => 'Invalid email or password',
                 'csrf_token' => $token,
                 'old' => $_POST

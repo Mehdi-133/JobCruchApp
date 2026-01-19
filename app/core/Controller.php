@@ -27,7 +27,7 @@ class Controller
         protected
         function redirect($url)
         {
-            $basePath = '/job_dating/public/';
+            $basePath = '/JobDatingV2/public/';
 
             $cleanedUrl = ltrim($url, '/');
 

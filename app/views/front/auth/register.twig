@@ -3,17 +3,24 @@
    {% block content %}
        <div class="login-container">
            <div class="logo">
-               <h1>Welcome Back</h1>
-               <p>Sign in to continue to Job Dating</p>
+               <h1>Create Account</h1>
+               <p>Sign up to get started with Job Dating</p>
            </div>
 
-
-
-           <form action="/login" method="POST">
+           <form action="/register" method="POST">
                <input type="hidden" name="csrf_token" value="{{csrf_token}}" >
+               
+               <div class="form-group">
+                   <label for="name">Full Name</label>
+                   <input type="text" id="name" name="name" placeholder="John Doe" value="{{ old.name ?? '' }}" required>
+                   {% if errors and errors.name %}
+                       <span style="color: #c53030; font-size: 12px; margin-top: 4px; display: block;">{{ errors.name[0] }}</span>
+                   {% endif %}
+               </div>
+
                <div class="form-group">
                    <label for="email">Email Address</label>
-                   <input type="email" id="email" name="email" placeholder="you@example.com" >
+                   <input type="email" id="email" name="email" placeholder="you@example.com" value="{{ old.email ?? '' }}" required>
                    {% if errors and errors.email %}
                        <span style="color: #c53030; font-size: 12px; margin-top: 4px; display: block;">{{ errors.email[0] }}</span>
                    {% endif %}
@@ -21,17 +28,21 @@
 
                <div class="form-group">
                    <label for="password">Password</label>
-                   <input type="password" id="password" name="password" placeholder="Enter your password" >
+                   <input type="password" id="password" name="password" placeholder="At least 8 characters" required>
                    {% if errors and errors.password %}
                        <span style="color: #c53030; font-size: 12px; margin-top: 4px; display: block;">{{ errors.password[0] }}</span>
                    {% endif %}
                </div>
 
-               <div class="forgot-password">
-                   <a href="#">Forgot password?</a>
-               </div>
+               <div class ="form-group">
+                   <label for="password_confirmation">Confirm Password</label>
+                   <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Re-enter your password" required>
+                   {% if errors and errors.password_confirmation %}
+                       <span style="color: #c53030; font-size: 12px; margin-top: 4px; display: block;">{{ errors.password_confirmation[0] }}</span>
+                   {% endif %}
+                </div>
 
-               <button type="submit" class="btn btn-primary">Sign In</button>
+               <button type="submit" class="btn btn-primary">Create Account</button>
            </form>
 
            <div class="divider">
@@ -57,8 +68,7 @@
            </div>
 
            <div class="register-link">
-               Don't have an account? <a href="/register">Sign up</a>
-
+               Already have an account? <a href="/login">Sign in</a>
            </div>
        </div>
    {% endblock %}

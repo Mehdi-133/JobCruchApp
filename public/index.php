@@ -16,12 +16,6 @@ $router->get('about', function () {
     return 'about page';
 });
 
-$router->get('users', [MainController::class, 'User']);
-$router->get('users/active', [MainController::class, 'activeUsers']);
-$router->get('create', [JobController::class, 'create']);
-$router->post('dashboard', [JobController::class, 'store']);
-$router->get('users/search', [MainController::class, 'findByEmail']);
-
 $router->get('session', function () {
     $session = Session::getInstance();
     $session->set('name', 'ahmed');

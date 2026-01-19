@@ -1,0 +1,17 @@
+{
+    "name": "lenovo/job_dating",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mehdi-133",
+            "email": "mehdikarbitou@gmail.com"
+        }
+    ],
+    "require": {
+        "twig/twig": "^3.22"
+    }
+}

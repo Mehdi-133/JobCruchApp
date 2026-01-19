@@ -1,0 +1,64 @@
+
+{% extends "Layouts/layout.twig" %}
+   {% block content %}
+       <div class="login-container">
+           <div class="logo">
+               <h1>Welcome Back</h1>
+               <p>Sign in to continue to Job Dating</p>
+           </div>
+
+
+
+           <form action="/login" method="POST">
+               <input type="hidden" name="csrf_token" value="{{csrf_token}}" >
+               <div class="form-group">
+                   <label for="email">Email Address</label>
+                   <input type="email" id="email" name="email" placeholder="you@example.com" >
+                   {% if errors and errors.email %}
+                       <span style="color: #c53030; font-size: 12px; margin-top: 4px; display: block;">{{ errors.email[0] }}</span>
+                   {% endif %}
+               </div>
+
+               <div class="form-group">
+                   <label for="password">Password</label>
+                   <input type="password" id="password" name="password" placeholder="Enter your password" >
+                   {% if errors and errors.password %}
+                       <span style="color: #c53030; font-size: 12px; margin-top: 4px; display: block;">{{ errors.password[0] }}</span>
+                   {% endif %}
+               </div>
+
+               <div class="forgot-password">
+                   <a href="#">Forgot password?</a>
+               </div>
+
+               <button type="submit" class="btn btn-primary">Sign In</button>
+           </form>
+
+           <div class="divider">
+               <span>or continue with</span>
+           </div>
+
+           <div class="social-login">
+               <button class="btn-social" onclick="location.href='#'">
+                   <svg width="18" height="18" viewBox="0 0 18 18">
+                       <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+                       <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+                       <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707 0-.593.102-1.17.282-1.709V4.958H.957C.347 6.173 0 7.548 0 9c0 1.452.348 2.827.957 4.042l3.007-2.335z"/>
+                       <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+                   </svg>
+                   Google
+               </button>
+               <button class="btn-social" onclick="location.href='#'">
+                   <svg width="18" height="18" viewBox="0 0 24 24" fill="#0077B5">
+                       <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                   </svg>
+                   LinkedIn
+               </button>
+           </div>
+
+           <div class="register-link">
+               Don't have an account? <a href="/register">Sign up</a>
+
+           </div>
+       </div>
+   {% endblock %}

@@ -8,7 +8,7 @@ return [
     ],
     'database' => [
         'host' => 'localhost',
-        'name' => 'job_dating',
+        'name' => 'jobdating',
         'username' => 'root',
         'password' => ''
 

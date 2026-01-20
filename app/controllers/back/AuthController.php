@@ -41,7 +41,7 @@ class AuthController extends Controller
         } else {
             $token = Security::getToken();
             $this->view('back/auth/login', [
-                'error' => 'Invalid email or password',
+                'error' => 'Invalid admin credentials. Please check your email and password.',
                 'csrf_token' => $token,
                 'old' => $_POST
             ]);

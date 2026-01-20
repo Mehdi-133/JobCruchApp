@@ -27,13 +27,9 @@ class Controller
         protected
         function redirect($url)
         {
-            $basePath = '/JobDatingV2/public/';
-
             $cleanedUrl = ltrim($url, '/');
 
-            $finalLocation = $basePath . $cleanedUrl;
-
-            header("Location: " . $finalLocation);
+            header("Location: /" . $cleanedUrl);
             exit;
         }
     }

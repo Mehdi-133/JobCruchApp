@@ -15,7 +15,7 @@ class Database {
 
         try {
             
-            $dsn = "mysql:host={$dbConfig['host']};port={$dbConfig['port']};dbname={$dbConfig['name']};charset=utf8mb4";
+            $dsn = "mysql:host={$dbConfig['host']};dbname={$dbConfig['name']};charset=utf8mb4";
             
             $this->connection = new PDO(
                 $dsn, 

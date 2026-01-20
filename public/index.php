@@ -17,6 +17,17 @@ $router->get('login', [AuthController::class, 'showLogin']);
 $router->post('login', [AuthController::class, 'login']);
 $router->get('logout', [AuthController::class, 'logout']);
 
+// Jobs route
+$router->get('jobs', function() {
+    if (!Auth::check()) {
+        header('Location: /JobDatingV2/public/login');
+        exit;
+    }
+    
+    $controller = new \App\controllers\front\JobController();
+    $controller->index();
+});
+
 // Admin routes
 $router->get('admin/login', [AdminAuthController::class, 'showLogin']);
 $router->post('admin/login', [AdminAuthController::class, 'login']);

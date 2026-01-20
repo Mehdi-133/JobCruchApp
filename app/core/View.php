@@ -38,6 +38,7 @@ class View
         }
 
         echo self::$twig->render($template . '.twig', $data);
+
     }
 
 

@@ -1,0 +1,24 @@
+use jobdating;
+
+CREATE TABLE IF NOT EXISTS USERS (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    user_name VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at DATETIME DEFAULT NULL,
+    role ENUM('admin', 'student') NOT NULL DEFAULT 'student'
+);
+
+CREATE TABLE IF NOT EXISTS annonces (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    company VARCHAR(100) NOT NULL,
+    contract ENUM('CDI', 'CDD', 'Internship', 'Freelance') NOT NULL,
+    location VARCHAR(100) NOT NULL,
+    posted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    expires_at DATETIME NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE
+);

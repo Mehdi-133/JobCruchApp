@@ -6,3 +6,4 @@ Thumbs.db
 composer.lock
 .idea/
 .vscode/
+config/config.php

@@ -107,6 +107,31 @@
             <div class="register-link">
                 Don't have an account? <a href="/register">Sign up</a>
             </div>
+            
+            <div class="admin-link">
+                <a href="/admin/login">Admin Login</a>
+            </div>
         </div>
     </div>
+    
+    <style>
+        .admin-link {
+            text-align: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .admin-link a {
+            color: #2d3748;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .admin-link a:hover {
+            color: #667eea;
+        }
+    </style>
 {% endblock %}

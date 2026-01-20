@@ -53,8 +53,7 @@ class AuthController extends Controller
         ]);
 
         $user = $userModel->findById($userId);
-        Auth::login($user);
-
+        // Don't auto-login, redirect to login page
         $this->redirect('login');
     }
 

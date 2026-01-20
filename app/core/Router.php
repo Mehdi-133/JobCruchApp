@@ -46,7 +46,7 @@ class Router
             $requestUri = substr($requestUri, 0, $pos);
         }
         
-        $basePath = '/job_dating/public/';
+        $basePath = '/JobDatingV2/public/';
         if (strpos($requestUri, $basePath) === 0) {
             $requestedRoute = substr($requestUri, strlen($basePath));
         } else {

@@ -48,8 +48,8 @@ class AuthController extends Controller
             'name' => Security::sanitize($_POST['name']),
             'email' => Security::sanitize($_POST['email']),
             'password' => Security::hashPassword($_POST['password']),
-            'role' => 'user',
-            'status' => 'active'
+            'role' => 'student'
+
         ]);
 
         $user = $userModel->findById($userId);

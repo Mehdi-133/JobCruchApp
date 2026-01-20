@@ -59,11 +59,11 @@ class Auth
             return false;
         }
 
-        if (!isset($user['PASSWORD'])) {
+        if (!isset($user['password'])) {
             return false;
         }
 
-        if (!Security::verifyPassword($password, $user['PASSWORD'])) {
+        if (!Security::verifyPassword($password, $user['password'])) {
             return false;
         }
 

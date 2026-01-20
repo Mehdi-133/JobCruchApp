@@ -11,14 +11,34 @@ CREATE TABLE IF NOT EXISTS USERS (
     role ENUM('admin', 'student') NOT NULL DEFAULT 'student'
 );
 
+CREATE TABLE IF NOT EXISTS companys (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    sector VARCHAR(100),
+    address VARCHAR(255) NOT NULL,
+    phone VARCHAR(20),
+    email VARCHAR(100) NOT NULL UNIQUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at DATETIME DEFAULT NULL
+);
+
 CREATE TABLE IF NOT EXISTS annonces (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,
-    company VARCHAR(100) NOT NULL,
+    company INT NOT NULL,
     contract ENUM('CDI', 'CDD', 'Internship', 'Freelance') NOT NULL,
     location VARCHAR(100) NOT NULL,
+    skills_required TEXT,
     posted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     expires_at DATETIME NOT NULL,
-    is_active BOOLEAN DEFAULT TRUE
+    is_active BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (company) REFERENCES companys(id)
 );
+
+--@block
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS companys;
+DROP TABLE IF EXISTS annonces;
+

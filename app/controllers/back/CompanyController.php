@@ -64,4 +64,72 @@ class CompanyController extends Controller
         exit;
     }
 
+
+    //update method
+
+    public function edit($id)
+    {
+        $company = new Company();
+        $companyData = $company->findById($id);
+
+        if (!$companyData) {
+            header('Location: /admin/companies');
+            exit;
+        }
+
+        $token = Security::getToken();
+        $this->view('back/companies/edit', [
+            'company' => $companyData,
+            'csrf_token' => $token
+        ]);
+    }
+
+
+    public function update($id)
+    {
+        if (!Security::validateToken($_POST['csrf_token'] ?? '')) {
+            die('Invalid CSRF token');
+        }
+
+        $validator = new Validator($_POST);
+        $validator->required('name')
+            ->min('name', 2)
+            ->required('email')
+            ->email('email')
+            ->required('address')
+            ->min('address', 10);
+
+        if ($validator->fails()) {
+            $company = new Company();
+            $companyData = $company->findById($id);
+            $token = Security::getToken();
+            $this->view('back/companies/edit', [
+                'company' => $companyData,
+                'errors' => $validator->errors(),
+                'csrf_token' => $token,
+                'old' => $_POST
+            ]);
+            return;
+        }
+
+        $company = new Company();
+        $companyData = [
+            'name' => Security::sanitize($_POST['name']),
+            'sector' => Security::sanitize($_POST['sector']),
+            'email' => Security::sanitize($_POST['email']),
+            'phone' => Security::sanitize($_POST['phone']),
+            'address' => Security::sanitize($_POST['address'])
+        ];
+
+        $company->update($id, $companyData);
+
+        header('Location: /admin/companies');
+        exit;
+    }
+
+
+
+
+
+
 }

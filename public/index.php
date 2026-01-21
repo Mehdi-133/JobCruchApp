@@ -44,6 +44,15 @@ $router->get('admin/login', [AdminAuthController::class, 'showLogin']);
 $router->post('admin/login', [AdminAuthController::class, 'login']);
 $router->get('admin/logout', [AdminAuthController::class, 'logout']);
 
-
+// Admin dashboard
+$router->get('admin/dashboard', function() {
+    if (!Auth::check() || Auth::user()['role'] !== 'admin') {
+        header('Location: /admin/login');
+        exit;
+    }
+    
+    $controller = new \App\controllers\back\DashboardController();
+    $controller->index();
+});
 
 $router->dispatch();

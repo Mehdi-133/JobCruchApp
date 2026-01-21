@@ -4,17 +4,14 @@ namespace App\models;
 
 use App\models\User;
 
-class Student extends User
+class Admin extends User
 {
-    protected $role = 'student';
-
-    // Student-specific attributes could be added here if needed
-    // For example: protected $graduation_year, $major, $university, etc.
+    protected $role = 'admin';
 
     public function __construct()
     {
         parent::__construct();
-        $this->role = self::ROLE_STUDENT;
+        $this->role = self::ROLE_ADMIN;
     }
 
     public function getCount()
@@ -22,7 +19,7 @@ class Student extends User
         return $this->getCountByRole($this->role);
     }
 
-    public function getRecentStudents($limit = 5)
+    public function getRecentAdmins($limit = 5)
     {
         return $this->getRecentByRole($this->role, $limit);
     }
@@ -32,8 +29,14 @@ class Student extends User
         return $this->getActiveCountByRole($this->role);
     }
 
-    public function getAllStudents()
+    public function getAllAdmins()
     {
         return $this->findByRole($this->role);
+    }
+
+    public function isAdmin($userId)
+    {
+        $admin = $this->findById($userId);
+        return $admin && $admin['role'] === 'admin';
     }
 }

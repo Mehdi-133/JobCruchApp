@@ -12,6 +12,7 @@ class Auth
         $session->set('user_id', $user['id']);
         $session->set('user_email', $user['email']);
         $session->set('user_name', $user['name']);
+        $session->set('user_role', $user['role']);
         $session->set('authenticated', true);
     }
 
@@ -21,6 +22,7 @@ class Auth
         $session->remove('user_id');
         $session->remove('user_email');
         $session->remove('user_name');
+        $session->remove('user_role');
         $session->remove('authenticated');
     }
 
@@ -40,7 +42,8 @@ class Auth
         return [
             'id' => $session->get('user_id'),
             'email' => $session->get('user_email'),
-            'name' => $session->get('user_name')
+            'name' => $session->get('user_name'),
+            'role' => $session->get('user_role')
         ];
     }
 

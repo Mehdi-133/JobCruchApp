@@ -744,7 +744,7 @@
                 <div class="stat-header">
                     <div class="stat-info">
                         <h3>Applications</h3>
-                        <div class="stat-number">{{ (stats.students.total ?? 0) * 3 }}</div>
+                        <div class="stat-number">{{ stats.applications.total ?? 0 }}</div>
                     </div>
                     <div class="stat-icon">
                         <i class="fas fa-file-alt"></i>
@@ -753,11 +753,11 @@
                 <div class="stat-details">
                     <div class="stat-detail">
                         <div class="stat-detail-label">Pending</div>
-                        <div class="stat-detail-value">{{ (stats.students.total ?? 0) }}</div>
+                        <div class="stat-detail-value">{{ stats.applications.pending ?? 0 }}</div>
                     </div>
                     <div class="stat-detail">
-                        <div class="stat-detail-label">Approved</div>
-                        <div class="stat-detail-value">{{ (stats.students.total ?? 0) * 2 }}</div>
+                        <div class="stat-detail-label">Accepted</div>
+                        <div class="stat-detail-value">{{ stats.applications.accepted ?? 0 }}</div>
                     </div>
                 </div>
             </div>

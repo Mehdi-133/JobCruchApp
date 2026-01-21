@@ -7,6 +7,7 @@ use App\core\Auth;
 use App\models\Student;
 use App\models\Company;
 use App\models\Announcement;
+use App\models\Application;
 
 class DashboardController extends Controller
 {
@@ -21,6 +22,7 @@ class DashboardController extends Controller
         $studentModel = new Student();
         $companyModel = new Company();
         $announcementModel = new Announcement();
+        $applicationModel = new Application();
 
         $stats = [
             'students' => [
@@ -38,6 +40,14 @@ class DashboardController extends Controller
                 'active' => $announcementModel->getActiveCount(),
                 'expired' => $announcementModel->getExpiredCount(),
                 'recent' => $announcementModel->getRecentAnnouncements(5)
+            ],
+            'applications' => [
+                'total' => $applicationModel->getCount(),
+                'pending' => $applicationModel->getPendingCount(),
+                'reviewed' => $applicationModel->getReviewedCount(),
+                'accepted' => $applicationModel->getAcceptedCount(),
+                'rejected' => $applicationModel->getRejectedCount(),
+                'recent' => $applicationModel->getRecentApplications(5)
             ]
         ];
 

@@ -35,6 +35,20 @@ CREATE TABLE IF NOT EXISTS annonces (
     expires_at DATETIME NOT NULL,
     is_active BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (company) REFERENCES companys(id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS applications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    annonce_id INT NOT NULL,
+    cover_letter TEXT,
+    applied_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('pending', 'reviewed', 'accepted', 'rejected') DEFAULT 'pending',
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (annonce_id) REFERENCES annonces(id)
+    ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 --@block

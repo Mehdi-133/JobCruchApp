@@ -7,6 +7,8 @@ use App\core\Validator;
 use App\controllers\front\AuthController;
 use App\controllers\front\JobController;
 use App\controllers\back\AuthController as AdminAuthController;
+use App\controllers\back\CompanyController;
+
 use App\core\Auth;
 
 $router = Router::getRouter();
@@ -54,5 +56,11 @@ $router->get('admin/dashboard', function() {
     $controller = new \App\controllers\back\DashboardController();
     $controller->index();
 });
+
+// Company routes
+$router->get('admin/companies', [CompanyController::class, 'index']);
+$router->get('admin/companies/create', [CompanyController::class, 'create']);
+$router->post('admin/companies/store', [CompanyController::class, 'store']);
+
 
 $router->dispatch();

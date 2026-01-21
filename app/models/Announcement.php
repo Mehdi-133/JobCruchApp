@@ -32,19 +32,19 @@ class Announcement extends Model
 
     public function getCount()
     {
-        $stmt = $this->db->query("SELECT COUNT(*) as count FROM {$this->table}");
+        $stmt = $this->db->query("SELECT COUNT(*) as count FROM {$this->table}", []);
         return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
     }
 
     public function getActiveCount()
     {
-        $stmt = $this->db->query("SELECT COUNT(*) as count FROM {$this->table} WHERE is_active = 1 AND expires_at > NOW()");
+        $stmt = $this->db->query("SELECT COUNT(*) as count FROM {$this->table} WHERE is_active = 1 AND expires_at > NOW()", []);
         return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
     }
 
     public function getExpiredCount()
     {
-        $stmt = $this->db->query("SELECT COUNT(*) as count FROM {$this->table} WHERE is_active = 0 OR expires_at <= NOW()");
+        $stmt = $this->db->query("SELECT COUNT(*) as count FROM {$this->table} WHERE is_active = 0 OR expires_at <= NOW()", []);
         return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
     }
 

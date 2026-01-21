@@ -24,6 +24,8 @@ class Auth
         $session->remove('user_name');
         $session->remove('user_role');
         $session->remove('authenticated');
+        $session->destroy();
+        clearstatcache();
     }
 
     public static function check()

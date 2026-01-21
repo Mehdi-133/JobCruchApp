@@ -26,6 +26,13 @@ class Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function findAllBy($field, $value)
+    {
+
+        $stmt = $this->db->query("SELECT * FROM {$this->table} WHERE {$field} = ?", [$value]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function findById($id)
     {
 

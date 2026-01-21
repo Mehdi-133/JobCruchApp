@@ -2,7 +2,45 @@
 
 namespace App\controllers\back;
 
-class DashboardController
-{
+use App\core\Controller;
+use App\core\Auth;
+use App\models\Student;
+use App\models\Company;
+use App\models\Announcement;
 
+class DashboardController extends Controller
+{
+    public function index()
+    {
+        // Check if admin is logged in
+        if (!Auth::check() || Auth::user()['role'] !== 'admin') {
+            header('Location: /admin/login');
+            exit;
+        }
+
+        $studentModel = new Student();
+        $companyModel = new Company();
+        $announcementModel = new Announcement();
+
+        $stats = [
+            'students' => [
+                'total' => $studentModel->getCount(),
+                'active' => $studentModel->getActiveCount(),
+                'recent' => $studentModel->getRecentStudents(5)
+            ],
+            'companies' => [
+                'total' => $companyModel->getCount(),
+                'active' => $companyModel->getActiveCount(),
+                'recent' => $companyModel->getRecentCompanies(5)
+            ],
+            'announcements' => [
+                'total' => $announcementModel->getCount(),
+                'active' => $announcementModel->getActiveCount(),
+                'expired' => $announcementModel->getExpiredCount(),
+                'recent' => $announcementModel->getRecentAnnouncements(5)
+            ]
+        ];
+
+        $this->view('back/dashboard/index', ['stats' => $stats]);
+    }
 }

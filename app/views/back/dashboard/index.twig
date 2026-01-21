@@ -763,49 +763,6 @@
             </div>
         </div>
 
-        <!-- Progress Section -->
-        <div class="progress-section">
-            <h2>
-                <i class="fas fa-chart-bar"></i>
-                Platform Statistics
-            </h2>
-            {% set totalUsers = (stats.students.total ?? 0) + (stats.companies.total ?? 0) %}
-            {% set targetUsers = 1000 %}
-            {% set userProgress = totalUsers > 0 ? ((totalUsers / targetUsers) * 100)|round : 0 %}
-            
-            <div class="progress-item">
-                <div class="progress-header">
-                    <span class="progress-label">User Growth (Target: {{ targetUsers }})</span>
-                    <span class="progress-value">{{ totalUsers }} users ({{ userProgress }}%)</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill primary" style="width: {{ userProgress > 100 ? 100 : userProgress }}%"></div>
-                </div>
-            </div>
-
-            {% set jobFillRate = stats.announcements.total > 0 ? (((stats.announcements.total - stats.announcements.active) / stats.announcements.total) * 100)|round : 0 %}
-            <div class="progress-item">
-                <div class="progress-header">
-                    <span class="progress-label">Job Fill Rate</span>
-                    <span class="progress-value">{{ jobFillRate }}%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill secondary" style="width: {{ jobFillRate }}%"></div>
-                </div>
-            </div>
-
-            {% set activeRate = totalUsers > 0 ? (((stats.students.active ?? 0) / totalUsers) * 100)|round : 0 %}
-            <div class="progress-item">
-                <div class="progress-header">
-                    <span class="progress-label">Active Users Rate</span>
-                    <span class="progress-value">{{ activeRate }}%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill success" style="width: {{ activeRate }}%"></div>
-                </div>
-            </div>
-        </div>
-
         <!-- Recent Activity -->
         <div class="activity-section" style="margin-top: 2rem;">
             <h2>

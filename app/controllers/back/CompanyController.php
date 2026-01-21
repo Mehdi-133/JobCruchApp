@@ -130,6 +130,19 @@ class CompanyController extends Controller
 
 
 
+    public function delete($id){
+
+
+        if(!Security::validateToken($_POST['csrf_token'] ?? '')){
+            die('Invalid CSRF token');
+        }
+        
+        $company = new Company();
+        $company->delete($id);
+        
+        header('Location: /admin/companies');
+        exit;
+    }
 
 
 }

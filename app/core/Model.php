@@ -15,7 +15,7 @@ class Model
     public function __construct()
     {
 
-        $this->db = Database::getInstance();
+        $this->db = Database::getInstance()->getConnection();
     }
 
 
@@ -29,14 +29,16 @@ class Model
     public function findAllBy($field, $value)
     {
 
-        $stmt = $this->db->query("SELECT * FROM {$this->table} WHERE {$field} = ?", [$value]);
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE {$field} = ?");
+        $stmt->execute([$value]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function findById($id)
     {
 
-        $stmt = $this->db->query("SELECT * FROM {$this->table} WHERE id = ?", [$id]);
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE id = ?");
+        $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
@@ -46,8 +48,9 @@ class Model
         $keys  = implode(',', array_keys($data));
         $placeHolders = ':' . implode(', :', array_keys($data));
         $sql = "INSERT INTO {$this->table} ({$keys}) VALUES ({$placeHolders})";
-        $stmt = $this->db->query($sql, $data);
-        return $this->db->getConnection()->lastInsertId();
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($data);
+        return $this->db->lastInsertId();
     }
 
 
@@ -63,6 +66,7 @@ class Model
     public function delete($id)
     {
         $sql = "DELETE FROM {$this->table} WHERE id = ?";
-        return $this->db->query($sql, [$id]);
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$id]);
     }
 }

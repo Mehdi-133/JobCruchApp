@@ -32,55 +32,58 @@ class Announcement extends Model
 
     public function getCount()
     {
-        $stmt = $this->db->query("SELECT COUNT(*) as count FROM {$this->table}", []);
+        $stmt = $this->db->query("SELECT COUNT(*) as count FROM {$this->table}");
         return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
     }
 
     public function getActiveCount()
     {
-        $stmt = $this->db->query("SELECT COUNT(*) as count FROM {$this->table} WHERE is_active = 1 AND expires_at > NOW()", []);
+        $stmt = $this->db->query("SELECT COUNT(*) as count FROM {$this->table} WHERE is_active = 1 AND expires_at > NOW()");
         return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
     }
 
     public function getExpiredCount()
     {
-        $stmt = $this->db->query("SELECT COUNT(*) as count FROM {$this->table} WHERE is_active = 0 OR expires_at <= NOW()", []);
+        $stmt = $this->db->query("SELECT COUNT(*) as count FROM {$this->table} WHERE is_active = 0 OR expires_at <= NOW()");
         return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
     }
 
     public function find($id)
     {
-        $stmt = $this->db->query(
+        $stmt = $this->db->prepare(
             "SELECT a.*, c.name as company_name, c.email as company_email, c.phone as company_phone 
              FROM {$this->table} a 
              LEFT JOIN companys c ON a.company = c.id 
-             WHERE a.id = ?", 
-            [$id]
+             WHERE a.id = ?"
         );
+        $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function getRecentAnnouncements($limit = 5)
     {
         $limit = (int)$limit;
-        $stmt = $this->db->query(
+        $stmt = $this->db->prepare(
             "SELECT a.*, c.name as company_name 
              FROM {$this->table} a 
              LEFT JOIN companys c ON a.company = c.id 
              ORDER BY a.posted_at DESC LIMIT {$limit}"
         );
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getByCompany($companyId)
     {
-        $stmt = $this->db->query("SELECT * FROM {$this->table} WHERE company = ?", [$companyId]);
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE company = ?");
+        $stmt->execute([$companyId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getByContract($contractType)
     {
-        $stmt = $this->db->query("SELECT * FROM {$this->table} WHERE contract = ? AND is_active = 1 AND expires_at > NOW()", [$contractType]);
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE contract = ? AND is_active = 1 AND expires_at > NOW()");
+        $stmt->execute([$contractType]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

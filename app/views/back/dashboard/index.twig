@@ -636,6 +636,8 @@
     </style>
 </head>
 <body>
+    {% include 'back/assets/nav.twig' with {'current_page': 'dashboard'} %}
+    
     <!-- Animated Background -->
     <div class="bg-animation">
         <span></span>
@@ -925,5 +927,7 @@
             });
         });
     </script>
+    
+    {% include 'back/assets/footer.twig' %}
 </body>
 </html>

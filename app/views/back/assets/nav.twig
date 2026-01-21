@@ -1,0 +1,270 @@
+<nav class="admin-navbar">
+    <div class="navbar-container">
+        <div class="navbar-brand">
+            <a href="/admin/dashboard" class="brand-logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <rect width="32" height="32" rx="8" fill="#3B82F6"/>
+                    <text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold">JD</text>
+                </svg>
+                <span class="brand-text">Job Dating Admin</span>
+            </a>
+        </div>
+
+        <div class="navbar-menu">
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a href="/admin/dashboard" class="nav-link {{ (current_page ?? '') == 'dashboard' ? 'active' : '' }}">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/students" class="nav-link {{ (current_page ?? '') == 'students' ? 'active' : '' }}">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        Students
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/companies" class="nav-link {{ (current_page ?? '') == 'companies' ? 'active' : '' }}">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                        Companies
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/announcements" class="nav-link {{ (current_page ?? '') == 'announcements' ? 'active' : '' }}">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Announcements
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="navbar-actions">
+            <div class="user-menu">
+                <button class="user-menu-button" onclick="toggleUserMenu()">
+                    <div class="user-avatar">A</div>
+                    <span class="user-name">Admin</span>
+                    <svg class="dropdown-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div class="user-dropdown" id="userDropdown">
+                    <a href="/admin/logout" class="dropdown-item logout-item">
+                        <svg class="dropdown-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<style>
+.admin-navbar {
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: #111827;
+    font-weight: 600;
+    font-size: 1.125rem;
+}
+
+.brand-text {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .brand-text {
+        display: inline;
+    }
+}
+
+.navbar-menu {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0.5rem;
+}
+
+.nav-item {
+    margin: 0;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: #6b7280;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    background: #f3f4f6;
+    color: #3b82f6;
+}
+
+.nav-link.active {
+    background: #eff6ff;
+    color: #3b82f6;
+}
+
+.nav-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+}
+
+.user-menu {
+    position: relative;
+}
+
+.user-menu-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: transparent;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.user-menu-button:hover {
+    background: #f3f4f6;
+}
+
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+}
+
+.user-name {
+    font-weight: 500;
+    color: #111827;
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .user-name {
+        display: inline;
+    }
+}
+
+.dropdown-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+    display: none;
+    z-index: 1001;
+}
+
+.user-dropdown.active {
+    display: block;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: #374151;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+    background: #f3f4f6;
+}
+
+.dropdown-item.logout-item {
+    color: #ef4444;
+    border-top: 1px solid #e5e7eb;
+}
+
+.dropdown-item.logout-item:hover {
+    background: #fef2f2;
+}
+</style>
+
+<script>
+function toggleUserMenu() {
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.classList.toggle('active');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    const userMenu = event.target.closest('.user-menu');
+    if (!userMenu) {
+        document.getElementById('userDropdown').classList.remove('active');
+    }
+});
+</script>

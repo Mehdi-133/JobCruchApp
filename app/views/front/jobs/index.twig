@@ -1,68 +1,7 @@
-{% extends "Layouts/layout.twig" %}
-{% block content %}
-    <div class="jobs-container">
-        <div class="success-message">
-            ✅ Login successful! Welcome to your student dashboard.
-        </div>
-        
-        <div class="header">
-            <h1>Available Jobs</h1>
-            <a href="/logout" class="logout-btn">Logout</a>
-        </div>
-        
-        <div class="jobs-list">
-            <p>Job listings will be displayed here...</p>
-        </div>
-    </div>
+{% extends "layouts/layout.twig" %}
 
-    <style>
-        .jobs-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            border: 1px solid #c3e6cb;
-            font-weight: 500;
-        }
-        
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-        
-        .header h1 {
-            color: #2d3748;
-            margin: 0;
-        }
-        
-        .logout-btn {
-            background: #dc3545;
-            color: white;
-            padding: 0.5rem 1rem;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: background 0.3s;
-        }
-        
-        .logout-btn:hover {
-            background: #c82333;
-        }
-        
-        .jobs-list {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-    </style>
+{% block title %}Job Opportunities - Job Dating YouCode{% endblock %}
+
+{% block content %}
+    {{ "Hey hey your login success!" }}
 {% endblock %}

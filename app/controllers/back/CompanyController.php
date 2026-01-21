@@ -14,13 +14,11 @@ class CompanyController extends Controller
 
         $company = new Company();
         $companys = $company->All();
-        $this->view('back/companies/index', ['companies' => $companys]);
-    }
-
-    public function create()
-    {
         $token = Security::getToken();
-        $this->view('back/companies/create', ['csrf_token' => $token]);
+        $this->view('back/companies/index', [
+            'companies' => $companys,
+            'csrf_token' => $token
+        ]);
     }
 
 
@@ -42,7 +40,7 @@ class CompanyController extends Controller
 
         if ($validator->fails()) {
             $token = Security::getToken();
-            $this->view('back/companies/create', [
+            $this->view('back/companies', [
                 'errors' => $validator->errors(),
                 'csrf_token' => $token,
                 'old' => $_POST
@@ -50,7 +48,6 @@ class CompanyController extends Controller
             return;
         }
 
-        // Create company
         $company = new Company();
         $companyData = [
             'name' => Security::sanitize($_POST['name']),
@@ -63,7 +60,6 @@ class CompanyController extends Controller
 
         $company->create($companyData);
 
-        // Redirect with success
         header('Location: /admin/companies');
         exit;
     }

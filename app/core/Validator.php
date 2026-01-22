@@ -55,9 +55,6 @@ class Validator
             case 'max':
                 $this->max($field, (int)$parameter);
                 break;
-            case 'same':
-                $this->same($field, $parameter);
-                break;
         }
     }
 

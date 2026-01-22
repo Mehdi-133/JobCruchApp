@@ -40,10 +40,8 @@ class Application extends Model
      */
     public function getCountByStatus($status)
     {
-        $stmt = $this->db->query(
-            "SELECT COUNT(*) as count FROM {$this->table} WHERE status = ?",
-            [$status]
-        );
+        $stmt = $this->db->prepare("SELECT COUNT(*) as count FROM {$this->table} WHERE status = ?");
+        $stmt->execute([$status]);
         return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
     }
 
@@ -84,14 +82,14 @@ class Application extends Model
      */
     public function getByUserId($userId)
     {
-        $stmt = $this->db->query(
+        $stmt = $this->db->prepare(
             "SELECT a.*, an.title as job_title, an.company, an.location 
              FROM {$this->table} a 
              LEFT JOIN annonces an ON a.annonce_id = an.id 
              WHERE a.user_id = ? 
-             ORDER BY a.applied_at DESC",
-            [$userId]
+             ORDER BY a.applied_at DESC"
         );
+        $stmt->execute([$userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -100,14 +98,14 @@ class Application extends Model
      */
     public function getByAnnonceId($annonceId)
     {
-        $stmt = $this->db->query(
+        $stmt = $this->db->prepare(
             "SELECT a.*, u.name, u.email 
              FROM {$this->table} a 
              LEFT JOIN users u ON a.user_id = u.id 
              WHERE a.annonce_id = ? 
-             ORDER BY a.applied_at DESC",
-            [$annonceId]
+             ORDER BY a.applied_at DESC"
         );
+        $stmt->execute([$annonceId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -117,7 +115,7 @@ class Application extends Model
     public function getRecentApplications($limit = 10)
     {
         $limit = (int) $limit; // Ensure it's an integer
-        $stmt = $this->db->query(
+        $stmt = $this->db->prepare(
             "SELECT a.*, u.name, u.email, an.title as job_title 
              FROM {$this->table} a 
              LEFT JOIN users u ON a.user_id = u.id 
@@ -125,6 +123,7 @@ class Application extends Model
              ORDER BY a.applied_at DESC 
              LIMIT {$limit}"
         );
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -133,15 +132,15 @@ class Application extends Model
      */
     public function getByStatus($status)
     {
-        $stmt = $this->db->query(
+        $stmt = $this->db->prepare(
             "SELECT a.*, u.name, u.email, an.title as job_title, an.company 
              FROM {$this->table} a 
              LEFT JOIN users u ON a.user_id = u.id 
              LEFT JOIN annonces an ON a.annonce_id = an.id 
              WHERE a.status = ? 
-             ORDER BY a.applied_at DESC",
-            [$status]
+             ORDER BY a.applied_at DESC"
         );
+        $stmt->execute([$status]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -169,11 +168,11 @@ class Application extends Model
      */
     public function hasUserApplied($userId, $annonceId)
     {
-        $stmt = $this->db->query(
+        $stmt = $this->db->prepare(
             "SELECT COUNT(*) as count FROM {$this->table} 
-             WHERE user_id = ? AND annonce_id = ?",
-            [$userId, $annonceId]
+             WHERE user_id = ? AND annonce_id = ?"
         );
+        $stmt->execute([$userId, $annonceId]);
         return $stmt->fetch(PDO::FETCH_ASSOC)['count'] > 0;
     }
 
@@ -182,16 +181,16 @@ class Application extends Model
      */
     public function getApplicationDetails($id)
     {
-        $stmt = $this->db->query(
+        $stmt = $this->db->prepare(
             "SELECT a.*, 
                     u.name, u.email,
                     an.title as job_title, an.company, an.location, an.contract, an.description as job_description
              FROM {$this->table} a 
              LEFT JOIN users u ON a.user_id = u.id 
              LEFT JOIN annonces an ON a.annonce_id = an.id 
-             WHERE a.id = ?",
-            [$id]
+             WHERE a.id = ?"
         );
+        $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 

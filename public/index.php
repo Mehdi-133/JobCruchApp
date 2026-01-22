@@ -62,5 +62,11 @@ $router->get('admin/companies', [CompanyController::class, 'index']);
 $router->get('admin/companies/create', [CompanyController::class, 'create']);
 $router->post('admin/companies/store', [CompanyController::class, 'store']);
 
+// Student routes
+$router->get('admin/students', [\App\controllers\back\StudentController::class, 'index']);
+$router->post('admin/students/store', [\App\controllers\back\StudentController::class, 'store']);
+$router->post('admin/students/update', [\App\controllers\back\StudentController::class, 'update']);
+$router->post('admin/students/delete', [\App\controllers\back\StudentController::class, 'delete']);
+
 
 $router->dispatch();

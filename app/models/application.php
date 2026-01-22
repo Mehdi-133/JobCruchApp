@@ -16,13 +16,14 @@ class Application extends Model
     const STATUS_REJECTED = 'rejected';
 
     // Fillable attributes
-    protected $fillable = ['user_id', 'annonce_id', 'cover_letter', 'status'];
+    protected $fillable = ['user_id', 'annonce_id', 'cover_letter', 'status', 'cv_path'];
 
     // Attributes
     protected $id;
     protected $user_id;
     protected $annonce_id;
     protected $cover_letter;
+    protected $cv_path;
     protected $applied_at;
     protected $status;
 

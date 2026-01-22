@@ -45,16 +45,66 @@ class AuthController extends Controller
             return;
         }
 
+        // Handle profile image upload
+        $profileImage = null;
+        if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            $maxSize = 2 * 1024 * 1024; // 2MB
+            
+            $fileType = $_FILES['profile_image']['type'];
+            $fileSize = $_FILES['profile_image']['size'];
+            
+            if (!in_array($fileType, $allowedTypes)) {
+                $token = Security::getToken();
+                $this->view('front/auth/register', [
+                    'errors' => ['profile_image' => ['Invalid file type. Only JPG, PNG, and GIF are allowed.']],
+                    'csrf_token' => $token,
+                    'old' => $_POST
+                ]);
+                return;
+            }
+            
+            if ($fileSize > $maxSize) {
+                $token = Security::getToken();
+                $this->view('front/auth/register', [
+                    'errors' => ['profile_image' => ['File size must not exceed 2MB.']],
+                    'csrf_token' => $token,
+                    'old' => $_POST
+                ]);
+                return;
+            }
+            
+            // Create uploads directory if it doesn't exist
+            $uploadDir = __DIR__ . '/../../public/uploads/profiles/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+            
+            // Generate unique filename
+            $extension = pathinfo($_FILES['profile_image']['name'], PATHINFO_EXTENSION);
+            $filename = uniqid('profile_', true) . '.' . $extension;
+            $destination = $uploadDir . $filename;
+            
+            if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $destination)) {
+                $profileImage = 'uploads/profiles/' . $filename;
+            }
+        }
+
         $userModel = new User();
-        $userId = $userModel->create([
+        $userData = [
             'name' => Security::sanitize($_POST['name']),
             'email' => Security::sanitize($_POST['email']),
             'password' => Security::hashPassword($_POST['password']),
             'speciality' => Security::sanitize($_POST['speciality']),
             'promo' => Security::sanitize($_POST['promo']),
             'role' => 'student'
-
-        ]);
+        ];
+        
+        if ($profileImage) {
+            $userData['profile_image'] = $profileImage;
+        }
+        
+        $userId = $userModel->create($userData);
 
         $user = $userModel->findById($userId);
         // Don't auto-login, redirect to login page

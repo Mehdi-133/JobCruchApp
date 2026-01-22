@@ -718,16 +718,22 @@
                             <span class="detail-icon"><i class="fas fa-envelope"></i></span>
                             <span class="detail-content">{{ student.email }}</span>
                         </div>
+                        {% if student.promotion %}
+                            <div class="detail-item">
+                                <span class="detail-icon"><i class="fas fa-graduation-cap"></i></span>
+                                <span class="detail-content">{{ student.promotion }}</span>
+                            </div>
+                        {% endif %}
+                        {% if student.speciality %}
+                            <div class="detail-item">
+                                <span class="detail-icon"><i class="fas fa-book"></i></span>
+                                <span class="detail-content">{{ student.speciality }}</span>
+                            </div>
+                        {% endif %}
                         <div class="detail-item">
                             <span class="detail-icon"><i class="fas fa-calendar"></i></span>
                             <span class="detail-content">Joined {{ student.created_at|date("M d, Y") }}</span>
                         </div>
-                        {% if student.updated_at and student.updated_at != student.created_at %}
-                            <div class="detail-item">
-                                <span class="detail-icon"><i class="fas fa-clock"></i></span>
-                                <span class="detail-content">Last updated {{ student.updated_at|date("M d, Y") }}</span>
-                            </div>
-                        {% endif %}
                     </div>
 
                 </article>

@@ -80,4 +80,7 @@ $router->post('admin/announcements/delete/{id}', [AnnouncementController::class,
 
 $router->post('admin/announcements/toggle/{id}', [AnnouncementController::class, 'toggleStatus']);
 
+// Application routes
+$router->get('admin/applications', [\App\controllers\back\ApplicationController::class, 'index']);
+
 $router->dispatch();

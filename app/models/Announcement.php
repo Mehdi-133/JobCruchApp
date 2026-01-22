@@ -61,7 +61,7 @@ class Announcement extends Model
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getRecentAnnouncements($limit = 5)
+    public function getRecentAnnouncements($limit = 10)
     {
         $limit = (int)$limit;
         $stmt = $this->dbInstance->secureQuery(

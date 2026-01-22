@@ -15,6 +15,8 @@
             --color-success-light: #ECFDF5;
             --color-danger: #DC2626;
             --color-danger-light: #FEF2F2;
+            --color-warning: #F59E0B;
+            --color-warning-light: #FEF3C7;
 
             --color-neutral-50: #FAFAFA;
             --color-neutral-100: #F5F5F5;
@@ -205,13 +207,13 @@
             font-size: 32px;
             font-weight: 700;
             letter-spacing: -0.02em;
-            color: var(--color-neutral-900);
+            color: white;
             margin-bottom: var(--spacing-xs);
         }
 
         .page-subtitle {
             font-size: 15px;
-            color: var(--color-neutral-500);
+            color: white;
             font-weight: 400;
             line-height: 1.5;
         }
@@ -606,6 +608,70 @@
             border-color: var(--color-neutral-400);
         }
 
+        /* Delete Modal Styles */
+        .delete-modal .modal-container {
+            max-width: 480px;
+        }
+
+        .delete-modal .modal-header {
+            background: linear-gradient(135deg, #FEF2F2 0%, white 100%);
+        }
+
+        .delete-modal .modal-title i {
+            color: var(--color-danger);
+        }
+
+        .delete-content {
+            padding: var(--spacing-lg);
+            text-align: center;
+        }
+
+        .delete-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--spacing-lg);
+            background: linear-gradient(135deg, var(--color-danger-light) 0%, #FEE2E2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-danger);
+            font-size: 32px;
+        }
+
+        .delete-message {
+            font-size: 16px;
+            color: var(--color-neutral-700);
+            margin-bottom: var(--spacing-sm);
+            font-weight: 500;
+        }
+
+        .delete-company-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-danger);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .delete-warning {
+            font-size: 14px;
+            color: var(--color-neutral-500);
+            margin-bottom: var(--spacing-lg);
+            line-height: 1.5;
+        }
+
+        .btn-danger {
+            background: var(--color-danger);
+            color: white;
+            border: 1.5px solid var(--color-danger);
+        }
+
+        .btn-danger:hover {
+            background: #B91C1C;
+            border-color: #B91C1C;
+            box-shadow: var(--shadow-md);
+        }
+
         /* Responsive Design */
         @media (max-width: 1024px) {
             .companies-grid {
@@ -647,22 +713,22 @@
     </style>
 </head>
 <body>
-    <!-- Animated Background -->
-    <div class="bg-animation">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
+<!-- Animated Background -->
+<div class="bg-animation">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
 
-    {% include 'back/assets/nav.twig' with {'current_page': 'companies'} %}
-    
+{% include 'back/assets/nav.twig' with {'current_page': 'companies'} %}
+
 <div class="page-container">
     <header class="page-header">
         <div class="header-content">
@@ -680,7 +746,7 @@
     {% if companies and companies|length > 0 %}
         <section class="companies-grid">
             {% for company in companies %}
-                <article class="company-card">
+                <article class="company-card" data-company-id="{{ company.id }}">
                     <div class="card-header">
                         <div class="company-avatar">
                             <i class="fas fa-building"></i>
@@ -709,12 +775,12 @@
                     </div>
 
                     <div class="card-actions">
-                        <a href="#" class="btn-secondary btn-edit">
+                        <button onclick="openEditModal({{ company.id }}, '{{ company.name|e('js') }}', '{{ company.sector|e('js') }}', '{{ company.email|e('js') }}', '{{ company.phone|e('js') }}', '{{ company.address|e('js') }}')" class="btn-secondary btn-edit">
                             <i class="fas fa-pen"></i> Edit
-                        </a>
-                        <a href="#" class="btn-secondary btn-delete">
+                        </button>
+                        <button onclick="openDeleteModal({{ company.id }}, '{{ company.name|e('js') }}')" class="btn-secondary btn-delete">
                             <i class="fas fa-trash-alt"></i> Delete
-                        </a>
+                        </button>
                     </div>
                 </article>
             {% endfor %}
@@ -733,7 +799,7 @@
     {% endif %}
 </div>
 
-<!-- Modal -->
+<!-- Add Company Modal -->
 <div id="modal-overlay" class="modal-overlay" onclick="closeModal()">
     <div class="modal-container" onclick="event.stopPropagation()">
         <div class="modal-header">
@@ -792,7 +858,106 @@
     </div>
 </div>
 
+<!-- Edit Company Modal -->
+<div id="edit-modal-overlay" class="modal-overlay" onclick="closeEditModal()">
+    <div class="modal-container" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="modal-title">
+                <i class="fas fa-pen"></i> Edit Company
+            </h2>
+            <button class="modal-close" onclick="closeEditModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <form id="edit-form" method="POST" action="/admin/companies/store"  class="modal-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label><i class="fas fa-building"></i> Company Name *</label>
+                    <input type="text" name="name" id="edit-name" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-industry"></i> Sector</label>
+                    <select name="sector" id="edit-sector">
+                        <option value="">Select sector</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Healthcare">Healthcare</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Education">Education</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email *</label>
+                    <input type="email" name="email" id="edit-email" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Phone</label>
+                    <input type="tel" name="phone" id="edit-phone">
+                </div>
+
+                <div class="form-group full-width">
+                    <label><i class="fas fa-map-marker-alt"></i> Address *</label>
+                    <textarea name="address" id="edit-address" required></textarea>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save"></i> Update Company
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Company Modal -->
+<div id="delete-modal-overlay" class="modal-overlay delete-modal" onclick="closeDeleteModal()">
+    <div class="modal-container" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="modal-title">
+                <i class="fas fa-exclamation-triangle"></i> Delete Company
+            </h2>
+            <button class="modal-close" onclick="closeDeleteModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="delete-content">
+            <div class="delete-icon">
+                <i class="fas fa-trash-alt"></i>
+            </div>
+            <div class="delete-message">Are you sure you want to delete</div>
+            <div class="delete-company-name" id="delete-company-name"></div>
+            <div class="delete-warning">
+                This action cannot be undone. All related job offers will also be permanently deleted.
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+                <button type="button" class="btn-cancel btn-danger" onclick="confirmDelete()">
+                    <i class="fas fa-trash-alt"></i> Delete Company
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden Delete Form -->
+<form id="delete-form" method="POST" style="display: none;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+</form>
+
 <script>
+    let currentDeleteId = null;
+
+    // Add Company Modal
     function openModal() {
         document.getElementById('modal-overlay').style.display = 'flex';
     }
@@ -801,8 +966,49 @@
         document.getElementById('modal-overlay').style.display = 'none';
     }
 
+    // Edit Company Modal
+    function openEditModal(id, name, sector, email, phone, address) {
+        document.getElementById('edit-form').action = `/admin/companies/update/${id}`;
+        document.getElementById('edit-name').value = name || '';
+        document.getElementById('edit-sector').value = sector || '';
+        document.getElementById('edit-email').value = email || '';
+        document.getElementById('edit-phone').value = phone || '';
+        document.getElementById('edit-address').value = address || '';
+        document.getElementById('edit-modal-overlay').style.display = 'flex';
+    }
+
+    function closeEditModal() {
+        document.getElementById('edit-modal-overlay').style.display = 'none';
+    }
+
+    // Delete Company Modal
+    function openDeleteModal(id, name) {
+        currentDeleteId = id;
+        document.getElementById('delete-company-name').textContent = name;
+        document.getElementById('delete-modal-overlay').style.display = 'flex';
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('delete-modal-overlay').style.display = 'none';
+        currentDeleteId = null;
+    }
+
+    function confirmDelete() {
+        if (currentDeleteId) {
+            const form = document.getElementById('delete-form');
+            form.action = `/admin/companies/delete/${currentDeleteId}`;
+            form.submit();
+        }
+    }
+
+
+    // Keyboard shortcuts
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeModal();
+        if (e.key === 'Escape') {
+            closeModal();
+            closeEditModal();
+            closeDeleteModal();
+        }
     });
 </script>
 

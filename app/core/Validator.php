@@ -45,6 +45,22 @@ class Validator
         return $this;
     }
 
+    public function in($field, $values, $message = null)
+    {
+        if (!empty($this->data[$field]) && !in_array($this->data[$field], $values)) {
+            $this->errors[$field][] = $message ?? "$field must be one of: " . implode(', ', $values);
+        }
+        return $this;
+    }
+
+    public function check($field, $message = null)
+    {
+        if (!empty($this->data[$field]) && !preg_match('/^[a-zA-Z\s]+$/', $this->data[$field])) {
+            $this->errors[$field][] = $message ?? "$field must contain only letters and spaces";
+        }
+        return $this;
+    }
+
 
     public function passes()
     {

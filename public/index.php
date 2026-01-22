@@ -8,7 +8,6 @@ use App\controllers\front\AuthController;
 use App\controllers\front\JobController;
 use App\controllers\back\AuthController as AdminAuthController;
 use App\controllers\back\CompanyController;
-
 use App\core\Auth;
 
 $router = Router::getRouter();
@@ -61,6 +60,12 @@ $router->get('admin/dashboard', function() {
 $router->get('admin/companies', [CompanyController::class, 'index']);
 $router->get('admin/companies/create', [CompanyController::class, 'create']);
 $router->post('admin/companies/store', [CompanyController::class, 'store']);
+
+
+$router->get('admin/companies/edit/{id}', [CompanyController::class, 'edit']);
+$router->post('admin/companies/update/{id}', [CompanyController::class, 'update']);
+$router->post('admin/companies/delete/{id}', [CompanyController::class, 'delete']);
+
 
 
 $router->dispatch();

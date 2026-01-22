@@ -41,6 +41,9 @@ $router->get('jobs/{id}', function($id) {
     $controller->show($id);
 });
 
+// Job application route
+$router->post('jobs/apply', [JobController::class, 'apply']);
+
 // Admin routes
 $router->get('admin/login', [AdminAuthController::class, 'showLogin']);
 $router->post('admin/login', [AdminAuthController::class, 'login']);

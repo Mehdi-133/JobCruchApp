@@ -79,3 +79,10 @@ INSERT INTO annonces (title, description, company, contract, location, skills_re
 ('Math Teacher', 'Teach mathematics to high school students.', 3, 'Internship', 'Boston, MA', 'Teaching Certification, Math Skills', '2024-10-31 23:59:59'),
 ('Financial Analyst', 'Analyze financial data and trends.', 4, 'Freelance', 'Chicago, IL', 'Finance Degree, Analytical Skills', '2024-09-30 23:59:59'),
 ('Store Manager', 'Oversee daily operations of the retail store.', 5, 'CDI', 'Los Angeles, CA', 'Management Experience, Customer Service', '2024-12-15 23:59:59');
+
+
+--@block
+ALTER TABLE users ADD COLUMN profile_image VARCHAR(255) DEFAULT NULL AFTER promotion;
+
+--@block
+ALTER TABLE applications ADD COLUMN cv_path VARCHAR(255) DEFAULT NULL AFTER applied_at;

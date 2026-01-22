@@ -30,7 +30,7 @@ class AnnouncementController extends Controller
     public function create()
     {
         $companyModel = new Company();
-        $companies = $companyModel->getAll();
+        $companies = $companyModel->All();
 
         $this->view('back/announcements/create', [
             'current_page' => 'announcements',
@@ -57,7 +57,7 @@ class AnnouncementController extends Controller
 
         if ($validator->fails()) {
             $companyModel = new Company();
-            $companies = $companyModel->getAll();
+            $companies = $companyModel->All();
 
             $this->view('back/announcements/create', [
                 'current_page' => 'announcements',

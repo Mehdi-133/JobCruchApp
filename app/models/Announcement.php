@@ -17,7 +17,7 @@ class Announcement extends Model
     const CONTRACT_FREELANCE = 'Freelance';
 
     // Fillable attributes
-    protected $fillable = ['title', 'description', 'company', 'contract', 'location', 'skills_required', 'expires_at'];
+    protected $fillable = ['title', 'description', 'company', 'contract', 'location', 'skills_required'];
 
     // Attributes
     protected $id;
@@ -28,7 +28,6 @@ class Announcement extends Model
     protected $location;
     protected $skills_required;
     protected $posted_at;
-    protected $expires_at;
     protected $is_active;
 
     public function getCount()
@@ -39,13 +38,13 @@ class Announcement extends Model
 
     public function getActiveCount()
     {
-        $stmt = $this->dbInstance->secureQuery("SELECT COUNT(*) as count FROM {$this->table} WHERE is_active = 1 AND expires_at > NOW()");
+        $stmt = $this->dbInstance->secureQuery("SELECT COUNT(*) as count FROM {$this->table} WHERE is_active = 1");
         return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
     }
 
     public function getExpiredCount()
     {
-        $stmt = $this->dbInstance->secureQuery("SELECT COUNT(*) as count FROM {$this->table} WHERE is_active = 0 OR expires_at <= NOW()");
+        $stmt = $this->dbInstance->secureQuery("SELECT COUNT(*) as count FROM {$this->table} WHERE is_active = 0");
         return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
     }
 
@@ -81,13 +80,13 @@ class Announcement extends Model
 
     public function getByContract($contractType)
     {
-        $stmt = $this->dbInstance->secureQuery("SELECT * FROM {$this->table} WHERE contract = ? AND is_active = 1 AND expires_at > NOW()", [$contractType]);
+        $stmt = $this->dbInstance->secureQuery("SELECT * FROM {$this->table} WHERE contract = ? AND is_active = 1", [$contractType]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function isExpired()
     {
-        return !$this->is_active || strtotime($this->expires_at) <= time();
+        return !$this->is_active;
     }
 
     public static function getContractTypes()

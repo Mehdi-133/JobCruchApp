@@ -21,37 +21,36 @@ class Company extends Model
     protected $email;
     protected $created_at;
     protected $updated_at;
-    protected $deleted_at;
 
     public function getCount()
     {
-        $stmt = $this->dbInstance->secureQuery("SELECT COUNT(*) as count FROM {$this->table} WHERE deleted_at IS NULL");
+        $stmt = $this->dbInstance->secureQuery("SELECT COUNT(*) as count FROM {$this->table}");
         return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
     }
 
     public function getRecentCompanies($limit = 5)
     {
         $limit = (int)$limit;
-        $stmt = $this->dbInstance->secureQuery("SELECT * FROM {$this->table} WHERE deleted_at IS NULL ORDER BY created_at DESC LIMIT {$limit}");
+        $stmt = $this->dbInstance->secureQuery("SELECT * FROM {$this->table} ORDER BY created_at DESC LIMIT {$limit}");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getActiveCount()
     {
         // Active companies are those created in the last 30 days
-        $stmt = $this->dbInstance->secureQuery("SELECT COUNT(*) as count FROM {$this->table} WHERE deleted_at IS NULL AND created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)");
+        $stmt = $this->dbInstance->secureQuery("SELECT COUNT(*) as count FROM {$this->table} WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)");
         return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
     }
 
     public function findByEmail($email)
     {
-        $stmt = $this->dbInstance->secureQuery("SELECT * FROM {$this->table} WHERE email = ? AND deleted_at IS NULL", [$email]);
+        $stmt = $this->dbInstance->secureQuery("SELECT * FROM {$this->table} WHERE email = ?", [$email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function findBySector($sector)
     {
-        $stmt = $this->dbInstance->secureQuery("SELECT * FROM {$this->table} WHERE sector = ? AND deleted_at IS NULL", [$sector]);
+        $stmt = $this->dbInstance->secureQuery("SELECT * FROM {$this->table} WHERE sector = ?", [$sector]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

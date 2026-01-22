@@ -18,6 +18,7 @@ class Auth
 
     public static function logout()
     {
+
         $session = Session::getInstance();
         $session->remove('user_id');
         $session->remove('user_email');
@@ -31,7 +32,14 @@ class Auth
     public static function check()
     {
         $session = Session::getInstance();
-        return $session->get('authenticated', false);
+        $isAuthenticated = $session->get('authenticated', false);
+        
+        // Prevent caching of authenticated pages
+        if ($isAuthenticated) {
+            Session::preventCaching();
+        }
+        
+        return $isAuthenticated;
     }
 
     public static function user()

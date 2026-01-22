@@ -8,8 +8,12 @@ class Student extends User
 {
     protected $role = 'student';
 
-    // Student-specific attributes could be added here if needed
-    // For example: protected $graduation_year, $major, $university, etc.
+    // Student-specific attributes
+    protected $promotion;
+    protected $speciality;
+
+    // Override fillable to include student-specific fields
+    protected $fillable = ['email', 'name', 'password', 'role', 'promotion', 'speciality'];
 
     public function __construct()
     {

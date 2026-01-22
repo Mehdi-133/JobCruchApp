@@ -7,9 +7,58 @@ class Validator
     private $errors = [];
     private $data = [];
 
-    public function __construct($data)
+    public function __construct($data = [])
     {
         $this->data = $data;
+    }
+
+    /**
+     * Validate data with rules
+     * @param array $rules - Format: ['field' => 'required|min:3|max:50']
+     */
+    public function validate($rules)
+    {
+        foreach ($rules as $field => $ruleString) {
+            $rules = explode('|', $ruleString);
+            
+            foreach ($rules as $rule) {
+                $this->applyRule($field, $rule);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * Apply a single rule to a field
+     */
+    private function applyRule($field, $rule)
+    {
+        // Parse rule and parameters
+        if (strpos($rule, ':') !== false) {
+            list($ruleName, $parameter) = explode(':', $rule, 2);
+        } else {
+            $ruleName = $rule;
+            $parameter = null;
+        }
+
+        // Apply the rule
+        switch ($ruleName) {
+            case 'required':
+                $this->required($field);
+                break;
+            case 'email':
+                $this->email($field);
+                break;
+            case 'min':
+                $this->min($field, (int)$parameter);
+                break;
+            case 'max':
+                $this->max($field, (int)$parameter);
+                break;
+            case 'same':
+                $this->same($field, $parameter);
+                break;
+        }
     }
 
     public function required($field, $message = null)
@@ -57,6 +106,15 @@ class Validator
     {
         if (!empty($this->data[$field]) && !preg_match('/^[a-zA-Z\s]+$/', $this->data[$field])) {
             $this->errors[$field][] = $message ?? "$field must contain only letters and spaces";
+    /**
+     * Validate that field matches another field
+     */
+    public function same($field, $otherField, $message = null)
+    {
+        if (isset($this->data[$field]) && isset($this->data[$otherField])) {
+            if ($this->data[$field] !== $this->data[$otherField]) {
+                $this->errors[$field][] = $message ?? "$field must match $otherField";
+            }
         }
         return $this;
     }

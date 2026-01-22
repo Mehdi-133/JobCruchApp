@@ -131,4 +131,22 @@ class AnnouncementController extends Controller
 
         $this->redirect('admin/announcements');
     }
+
+    public function toggleStatus($id)
+    {
+        if (!Security::validateToken($_POST['csrf_token'] ?? '')) {
+            die('Invalid CSRF token');
+        }
+
+        $announcementModel = new Announcement();
+        $announcement = $announcementModel->findById($id);
+
+        if ($announcement) {
+            $newStatus = $announcement['is_active'] ? 0 : 1;
+            $announcementModel->update($id, ['is_active' => $newStatus]);
+        }
+
+        $this->redirect('admin/announcements');
+    }
+
 }

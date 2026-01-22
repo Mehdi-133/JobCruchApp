@@ -77,4 +77,7 @@ $router->post('admin/announcements/store', [AnnouncementController::class, 'stor
 $router->post('admin/announcements/update/{id}', [AnnouncementController::class, 'update']);
 $router->post('admin/announcements/delete/{id}', [AnnouncementController::class, 'delete']);
 
+
+$router->post('admin/announcements/toggle/{id}', [AnnouncementController::class, 'toggleStatus']);
+
 $router->dispatch();

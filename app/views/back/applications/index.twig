@@ -265,6 +265,43 @@
             font-size: 13px;
         }
 
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            margin-right: 4px;
+        }
+
+        .accept-btn {
+            background: var(--color-success-light);
+            color: var(--color-success);
+        }
+
+        .accept-btn:hover {
+            background: var(--color-success);
+            color: white;
+        }
+
+        .reject-btn {
+            background: var(--color-danger-light);
+            color: var(--color-danger);
+        }
+
+        .reject-btn:hover {
+            background: var(--color-danger);
+            color: white;
+        }
+
+        .action-disabled {
+            font-size: 12px;
+            color: var(--color-neutral-500);
+            font-style: italic;
+        }
+
         .empty-state {
             background: white;
             border: 2px dashed var(--color-neutral-300);
@@ -366,6 +403,7 @@
                         <th>Status</th>
                         <th>Speciality</th>
                         <th>Promo</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -397,6 +435,18 @@
                             </td>
                             <td>{{ application.speciality ?? 'N/A' }}</td>
                             <td>{{ application.promo ?? 'N/A' }}</td>
+                            <td>
+                                {% if application.status == 'pending' %}
+                                    <button onclick="acceptApplication({{ application.id }})" class="action-btn accept-btn">
+                                        <i class="fas fa-check"></i> Accept
+                                    </button>
+                                    <button onclick="rejectApplication({{ application.id }})" class="action-btn reject-btn">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                {% else %}
+                                    <span class="action-disabled">{{ application.status|title }}</span>
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

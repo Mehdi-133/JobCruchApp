@@ -28,6 +28,31 @@ class Application extends Model
     protected $status;
 
     /**
+     * Get all applications with detailed information
+     */
+    public function getAllApplicationsWithDetails()
+    {
+        $stmt = $this->dbInstance->secureQuery(
+            "SELECT a.*, 
+                    u.name as student_name, 
+                    u.email as student_email,
+                    u.speciality,
+                    u.promo as promo,
+                    an.title as job_title,
+                    an.contract as contract_type,
+                    c.name as company_name,
+                    a.applied_at,
+                    a.status
+             FROM {$this->table} a 
+             LEFT JOIN users u ON a.user_id = u.id 
+             LEFT JOIN annonces an ON a.annonce_id = an.id
+             LEFT JOIN companys c ON an.company = c.id
+             ORDER BY a.applied_at DESC"
+        );
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * Get total count of applications
      */
     public function getCount()

@@ -106,17 +106,8 @@ class Validator
     {
         if (!empty($this->data[$field]) && !preg_match('/^[a-zA-Z\s]+$/', $this->data[$field])) {
             $this->errors[$field][] = $message ?? "$field must contain only letters and spaces";
-    /**
-     * Validate that field matches another field
-     */
-    public function same($field, $otherField, $message = null)
-    {
-        if (isset($this->data[$field]) && isset($this->data[$otherField])) {
-            if ($this->data[$field] !== $this->data[$otherField]) {
-                $this->errors[$field][] = $message ?? "$field must match $otherField";
-            }
+
         }
-        return $this;
     }
 
 

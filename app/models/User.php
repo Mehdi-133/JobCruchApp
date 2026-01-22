@@ -32,51 +32,47 @@ class User extends Model
     }
     public function findByEmail($email)
     {
-        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE email = ?");
-        $stmt->execute([$email]);
+        $stmt = $this->dbInstance->secureQuery("SELECT * FROM {$this->table} WHERE email = ?", [$email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function findByRole($role)
     {
-        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE role = ? AND deleted_at IS NULL");
-        $stmt->execute([$role]);
+        $stmt = $this->dbInstance->secureQuery("SELECT * FROM {$this->table} WHERE role = ? AND deleted_at IS NULL", [$role]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getActiveUsers()
     {
-        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE deleted_at IS NULL");
-        $stmt->execute();
+        $stmt = $this->dbInstance->secureQuery("SELECT * FROM {$this->table} WHERE deleted_at IS NULL");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getCountByRole($role)
     {
-        $stmt = $this->db->prepare("SELECT COUNT(*) as count FROM {$this->table} WHERE role = ? AND deleted_at IS NULL");
-        $stmt->execute([$role]);
+        $stmt = $this->dbInstance->secureQuery("SELECT COUNT(*) as count FROM {$this->table} WHERE role = ? AND deleted_at IS NULL", [$role]);
         return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
     }
 
     public function getRecentByRole($role, $limit = 5)
     {
         $limit = (int)$limit;
-        $stmt = $this->db->prepare(
-            "SELECT * FROM {$this->table} WHERE role = ? AND deleted_at IS NULL ORDER BY created_at DESC LIMIT {$limit}"
+        $stmt = $this->dbInstance->secureQuery(
+            "SELECT * FROM {$this->table} WHERE role = ? AND deleted_at IS NULL ORDER BY created_at DESC LIMIT {$limit}",
+            [$role]
         );
-        $stmt->execute([$role]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getActiveCountByRole($role)
     {
         // Active users are those created in the last 30 days
-        $stmt = $this->db->prepare(
+        $stmt = $this->dbInstance->secureQuery(
             "SELECT COUNT(*) as count FROM {$this->table} 
              WHERE role = ? AND deleted_at IS NULL 
-             AND created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)"
+             AND created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)",
+            [$role]
         );
-        $stmt->execute([$role]);
         return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
     }
 

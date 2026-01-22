@@ -21,6 +21,8 @@ class User extends Model
     protected $name;
     protected $password;
     protected $role;
+    protected $speciality;
+    protected $promo;
     protected $created_at;
     protected $updated_at;
     protected $deleted_at;

@@ -1,4 +1,3 @@
-
 {% extends "Layouts/layout.twig" %}
 {% block content %}
     <div class="login-container">
@@ -14,7 +13,7 @@
 
                 <h1>test</h1>
                 <p>Join thousands of professionals finding their dream careers</p>
-                
+
                 <div class="feature-list">
                     <div class="feature-item">
                         <div class="feature-icon">
@@ -61,75 +60,112 @@
             </div>
 
             <form action="/register" method="POST">
-               <input type="hidden" name="csrf_token" value="{{csrf_token}}" >
-               
-               <div class="form-group">
-                   <label for="name">Full Name</label>
-                   <input type="text" id="name" name="name" placeholder="John Doe" value="{{ old.name ?? '' }}" required>
-                   {% if errors and errors.name %}
-                       <span style="color: #c53030; font-size: 12px; margin-top: 4px; display: block;">{{ errors.name[0] }}</span>
-                   {% endif %}
-               </div>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-               <div class="form-group">
-                   <label for="email">Email Address</label>
-                   <input type="email" id="email" name="email" placeholder="you@example.com" value="{{ old.email ?? '' }}" required>
-                   {% if errors and errors.email %}
-                       <span style="color: #c53030; font-size: 12px; margin-top: 4px; display: block;">{{ errors.email[0] }}</span>
-                   {% endif %}
-               </div>
-
-               <div class="form-group">
-                   <label for="password">Password</label>
-                   <input type="password" id="password" name="password" placeholder="At least 8 characters" required>
-                   {% if errors and errors.password %}
-                       <span style="color: #c53030; font-size: 12px; margin-top: 4px; display: block;">{{ errors.password[0] }}</span>
-                   {% endif %}
-               </div>
-
-               <div class ="form-group">
-                   <label for="password_confirmation">Confirm Password</label>
-                   <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Re-enter your password" required>
-                   {% if errors and errors.password_confirmation %}
-                       <span style="color: #c53030; font-size: 12px; margin-top: 4px; display: block;">{{ errors.password_confirmation[0] }}</span>
-                   {% endif %}
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="John Doe" value="{{ old.name ?? '' }}"
+                           required>
+                    {% if errors and errors.name %}
+                        <span style="color: #c53030; font-size: 12px; margin-top: 4px; display: block;">{{ errors.name[0] }}</span>
+                    {% endif %}
                 </div>
 
-               <button type="submit" class="btn btn-primary">Create Account</button>
-           </form>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com"
+                           value="{{ old.email ?? '' }}" required>
+                    {% if errors and errors.email %}
+                        <span style="color: #c53030; font-size: 12px; margin-top: 4px; display: block;">{{ errors.email[0] }}</span>
+                    {% endif %}
+                </div>
 
-           <div class="divider">
-               <span>or continue with</span>
-           </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="At least 8 characters" required>
+                    {% if errors and errors.password %}
+                        <span style="color: #c53030; font-size: 12px; margin-top: 4px; display: block;">{{ errors.password[0] }}</span>
+                    {% endif %}
+                </div>
 
-           <div class="social-login">
-               <button class="btn-social" onclick="location.href='#'">
-                   <svg width="18" height="18" viewBox="0 0 18 18">
-                       <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
-                       <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
-                       <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707 0-.593.102-1.17.282-1.709V4.958H.957C.347 6.173 0 7.548 0 9c0 1.452.348 2.827.957 4.042l3.007-2.335z"/>
-                       <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
-                   </svg>
-                   Google
-               </button>
-               <button class="btn-social" onclick="location.href='#'">
-                   <svg width="18" height="18" viewBox="0 0 24 24" fill="#0077B5">
-                       <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                   </svg>
-                   LinkedIn
-               </button>
-           </div>
+                <div class="form-group">
+                    <label for="password_confirmation">Confirm Password</label>
+                    <input type="password" id="password_confirmation" name="password_confirmation"
+                           placeholder="Re-enter your password" required>
+                    {% if errors and errors.password_confirmation %}
+                        <span style="color: #c53030; font-size: 12px; margin-top: 4px; display: block;">{{ errors.password_confirmation[0] }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="speciality">Speciality</label>
+                    <input type="text" id="speciality" name="speciality" placeholder="Your speciality"
+                           value="{{ old.speciality ?? '' }}">
+                    {% if errors and errors.speciality %}
+                        <span style="color: #c53030; font-size: 12px; margin-top: 4px; display: block;">{{ errors.speciality[0] }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="promo">Promo</label>
+                    <select id="promo" name="promo">
+                        <option value="">Select your promo</option>
+                        <option value="2020/2021" {{ (old.promo ?? '') == '2020/2021' ? 'selected' : '' }}>2020/2021
+                        </option>
+                        <option value="2021/2022" {{ (old.promo ?? '') == '2021/2022' ? 'selected' : '' }}>2021/2022
+                        </option>
+                        <option value="2022/2023" {{ (old.promo ?? '') == '2022/2023' ? 'selected' : '' }}>2022/2023
+                        </option>
+                        <option value="2023/2024" {{ (old.promo ?? '') == '2023/2024' ? 'selected' : '' }}>2023/2024
+                        </option>
+                        <option value="2024/2025" {{ (old.promo ?? '') == '2024/2025' ? 'selected' : '' }}>2024/2025
+                        </option>
+                    </select>
+                    {% if errors and errors.promo %}
+                        <span style="color: #c53030; font-size: 12px; margin-top: 4px; display: block;">{{ errors.promo[0] }}</span>
+                    {% endif %}
+                </div>
+
+
+                <button type="submit" class="btn btn-primary">Create Account</button>
+            </form>
+
+            <div class="divider">
+                <span>or continue with</span>
+            </div>
+
+            <div class="social-login">
+                <button class="btn-social" onclick="location.href='#'">
+                    <svg width="18" height="18" viewBox="0 0 18 18">
+                        <path fill="#4285F4"
+                              d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+                        <path fill="#34A853"
+                              d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+                        <path fill="#FBBC05"
+                              d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707 0-.593.102-1.17.282-1.709V4.958H.957C.347 6.173 0 7.548 0 9c0 1.452.348 2.827.957 4.042l3.007-2.335z"/>
+                        <path fill="#EA4335"
+                              d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+                    </svg>
+                    Google
+                </button>
+                <button class="btn-social" onclick="location.href='#'">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#0077B5">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                    LinkedIn
+                </button>
+            </div>
 
             <div class="register-link">
                 Already have an account? <a href="/login">Sign in</a>
             </div>
-            
+
             <div class="admin-link">
                 <a href="/admin/login">Admin Login</a>
             </div>
         </div>
     </div>
-    
+
     <style>
         .admin-link {
             text-align: center;
@@ -148,6 +184,28 @@
 
         .admin-link a:hover {
             color: #667eea;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: white;
+            color: #2d3748;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
     </style>
 {% endblock %}

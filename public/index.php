@@ -8,7 +8,6 @@ use App\controllers\front\AuthController;
 use App\controllers\front\JobController;
 use App\controllers\back\AuthController as AdminAuthController;
 use App\controllers\back\CompanyController;
-
 use App\core\Auth;
 
 $router = Router::getRouter();
@@ -67,6 +66,12 @@ $router->get('admin/students', [\App\controllers\back\StudentController::class, 
 $router->post('admin/students/store', [\App\controllers\back\StudentController::class, 'store']);
 $router->post('admin/students/update', [\App\controllers\back\StudentController::class, 'update']);
 $router->post('admin/students/delete', [\App\controllers\back\StudentController::class, 'delete']);
+
+
+$router->get('admin/companies/edit/{id}', [CompanyController::class, 'edit']);
+$router->post('admin/companies/update/{id}', [CompanyController::class, 'update']);
+$router->post('admin/companies/delete/{id}', [CompanyController::class, 'delete']);
+
 
 
 $router->dispatch();

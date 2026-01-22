@@ -30,7 +30,9 @@ class AuthController extends Controller
             ->required('email')
             ->email('email')
             ->required('password')
-            ->min('password', 8);
+            ->min('password', 8)
+            ->required('promo')
+            ->in('promo', ['2020/2021', '2021/2022', '2022/2023', '2023/2024', '2024/2025']);
 
 
         if ($validator->fails()) {
@@ -48,6 +50,8 @@ class AuthController extends Controller
             'name' => Security::sanitize($_POST['name']),
             'email' => Security::sanitize($_POST['email']),
             'password' => Security::hashPassword($_POST['password']),
+            'speciality' => Security::sanitize($_POST['speciality']),
+            'promo' => Security::sanitize($_POST['promo']),
             'role' => 'student'
 
         ]);

@@ -55,38 +55,9 @@ $router->get('jobs/{id}', function($id) {
 // Job application route
 $router->post('jobs/apply', [JobController::class, 'apply']);
 
-// My applications route
-$router->get('my-applications', function() {
-    if (!Auth::check()) {
-        header('Location: /login');
-        exit;
-    }
-
-    $controller = new JobController();
-    $controller->myApplications();
-});
-
-// Profile route
-$router->get('profile', function() {
-    if (!Auth::check()) {
-        header('Location: /login');
-        exit;
-    }
-
-    $controller = new JobController();
-    $controller->profile();
-});
-
-// Update profile route
-$router->post('profile/update', function() {
-    if (!Auth::check()) {
-        header('Location: /login');
-        exit;
-    }
-
-    $controller = new JobController();
-    $controller->updateProfile();
-});
+// Student applications routes
+$router->get('student/applications', [JobController::class, 'applications']);
+$router->get('student/applications/refresh', [JobController::class, 'refreshApplications']);
 
 // Admin routes
 $router->get('admin/login', [AdminAuthController::class, 'showLogin']);
@@ -129,5 +100,8 @@ $router->post('admin/announcements/toggle/{id}', [AnnouncementController::class,
 
 // Application routes
 $router->get('admin/applications', [\App\controllers\back\ApplicationController::class, 'index']);
+$router->post('admin/applications/accept/{id}', [\App\controllers\back\ApplicationController::class, 'accept']);
+$router->post('admin/applications/reject/{id}', [\App\controllers\back\ApplicationController::class, 'reject']);
+$router->post('admin/applications/reset/{id}', [\App\controllers\back\ApplicationController::class, 'reset']);
 
 $router->dispatch();

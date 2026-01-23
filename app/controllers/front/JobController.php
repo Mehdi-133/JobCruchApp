@@ -8,6 +8,7 @@
     use App\core\Security;
     use App\models\Announcement;
     use App\models\Application;
+    use App\models\User;
 
     class JobController extends  Controller {
 
@@ -20,21 +21,36 @@
             }
             
             $user = Auth::user();
+            
+            // Get fresh user data from database to ensure profile_image is loaded
+            $userModel = new User();
+            $freshUserData = $userModel->findById($user['id']);
+            if ($freshUserData) {
+                $user = $freshUserData;
+                // Update session with fresh data
+                Auth::updateSession($user);
+            }
+            
             $announcementModel = new Announcement();
             $applicationModel = new Application();
             
             // Get all active jobs
             $jobs = $announcementModel->All();
             
-            // Check if user already applied to any job
-            $userApplication = $applicationModel->getByUserId($user['id']);
-            $hasApplied = !empty($userApplication);
-            $appliedJobId = $hasApplied ? $userApplication[0]['annonce_id'] : null;
+            // Check if user has an ACCEPTED application (if accepted, can't apply anymore)
+            $acceptedApplication = $applicationModel->getByUserIdAndStatus($user['id'], Application::STATUS_ACCEPTED);
+            $hasAccepted = !empty($acceptedApplication);
+            $acceptedJobId = $hasAccepted ? $acceptedApplication[0]['annonce_id'] : null;
+            
+            // Get all jobs user has already applied to
+            $allApplications = $applicationModel->getByUserId($user['id']);
+            $appliedJobIds = array_map(function($app) { return $app['annonce_id']; }, $allApplications);
             
             $this->view('front/jobs/index', [
                 'jobs' => $jobs,
-                'hasApplied' => $hasApplied,
-                'appliedJobId' => $appliedJobId,
+                'hasAccepted' => $hasAccepted,
+                'acceptedJobId' => $acceptedJobId,
+                'appliedJobIds' => $appliedJobIds,
                 'user' => $user,
                 'csrf_token' => Security::getToken(),
                 'page_type' => 'student'
@@ -56,11 +72,19 @@
             
             $user = Auth::user();
             $applicationModel = new Application();
+            $jobId = Security::sanitize($_POST['job_id']);
             
-            // Check if user already applied to a job
-            $existingApplication = $applicationModel->getByUserId($user['id']);
-            if (!empty($existingApplication)) {
-                $_SESSION['error'] = 'You have already applied to a job. You can only apply to one job.';
+            // Check if user has an ACCEPTED application (if accepted, can't apply anymore)
+            $acceptedApplication = $applicationModel->getByUserIdAndStatus($user['id'], Application::STATUS_ACCEPTED);
+            if (!empty($acceptedApplication)) {
+                $_SESSION['error'] = 'You have already been accepted for a position. You cannot apply to other jobs.';
+                header('Location: /jobs');
+                exit;
+            }
+            
+            // Check if user already applied to this specific job
+            if ($applicationModel->hasUserApplied($user['id'], $jobId)) {
+                $_SESSION['error'] = 'You have already applied to this job.';
                 header('Location: /jobs');
                 exit;
             }

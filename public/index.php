@@ -13,6 +13,17 @@ use App\core\Auth;
 
 $router = Router::getRouter();
 
+// Home route
+$router->get('', function() {
+    if (!Auth::check()) {
+        header('Location: /login');
+        exit;
+    }
+
+    $controller = new JobController();
+    $controller->profile();
+});
+
 $router->get('register', [AuthController::class, 'showRegister']);
 $router->post('register', [AuthController::class, 'register']);
 $router->get('login', [AuthController::class, 'showLogin']);

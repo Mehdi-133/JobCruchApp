@@ -13,6 +13,9 @@ class Auth
         $session->set('user_email', $user['email']);
         $session->set('user_name', $user['name']);
         $session->set('user_role', $user['role']);
+        $session->set('user_profile_image', $user['profile_image'] ?? null);
+        $session->set('user_speciality', $user['speciality'] ?? null);
+        $session->set('user_promo', $user['promo'] ?? null);
         $session->set('authenticated', true);
     }
 
@@ -24,6 +27,9 @@ class Auth
         $session->remove('user_email');
         $session->remove('user_name');
         $session->remove('user_role');
+        $session->remove('user_profile_image');
+        $session->remove('user_speciality');
+        $session->remove('user_promo');
         $session->remove('authenticated');
         $session->destroy();
         clearstatcache();
@@ -53,7 +59,10 @@ class Auth
             'id' => $session->get('user_id'),
             'email' => $session->get('user_email'),
             'name' => $session->get('user_name'),
-            'role' => $session->get('user_role')
+            'role' => $session->get('user_role'),
+            'profile_image' => $session->get('user_profile_image'),
+            'speciality' => $session->get('user_speciality'),
+            'promo' => $session->get('user_promo')
         ];
     }
 
@@ -82,6 +91,18 @@ class Auth
 
         self::login($user);
         return true;
+    }
+
+    public static function updateSession($user)
+    {
+        $session = Session::getInstance();
+        if (isset($user['id'])) $session->set('user_id', $user['id']);
+        if (isset($user['email'])) $session->set('user_email', $user['email']);
+        if (isset($user['name'])) $session->set('user_name', $user['name']);
+        if (isset($user['role'])) $session->set('user_role', $user['role']);
+        if (isset($user['profile_image'])) $session->set('user_profile_image', $user['profile_image']);
+        if (isset($user['speciality'])) $session->set('user_speciality', $user['speciality']);
+        if (isset($user['promo'])) $session->set('user_promo', $user['promo']);
     }
 
     public static function guest()

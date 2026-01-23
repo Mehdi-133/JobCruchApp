@@ -296,8 +296,13 @@
             color: var(--color-danger);
         }
 
-        .reject-btn:hover {
-            background: var(--color-danger);
+        .reset-btn {
+            background: var(--color-warning-light);
+            color: var(--color-warning);
+        }
+
+        .reset-btn:hover {
+            background: var(--color-warning);
             color: white;
         }
 
@@ -932,6 +937,10 @@
                                 <button onclick="rejectApplication({{ application.id }})" class="action-btn reject-btn">
                                     <i class="fas fa-times"></i> Reject
                                 </button>
+                            {% elseif application.status == 'accepted' or application.status == 'rejected' %}
+                                <button onclick="resetApplication({{ application.id }})" class="action-btn reset-btn">
+                                    <i class="fas fa-undo"></i> Reset to Pending
+                                </button>
                             {% else %}
                                 <span class="action-disabled">{{ application.status|title }}</span>
                             {% endif %}
@@ -1135,6 +1144,10 @@
                 <button class="modal-btn modal-btn-reject" onclick="rejectApplication(${app.id})">
                     <i class="fas fa-times"></i> Reject Application
                 </button>
+                ` : (app.status === 'accepted' || app.status === 'rejected') ? `
+                <button class="modal-btn modal-btn-reset" onclick="resetApplication(${app.id})" style="background: var(--color-warning); color: white;">
+                    <i class="fas fa-undo"></i> Reset to Pending
+                </button>
                 ` : ''}
                 <button class="modal-btn modal-btn-close" onclick="closeModal()">
                     <i class="fas fa-times"></i> Close
@@ -1152,36 +1165,228 @@
 
     function acceptApplication(id) {
         if (confirm('Are you sure you want to accept this application?')) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/JobDatingV2/public/admin/applications/accept/' + id;
-
-            const csrfInput = document.createElement('input');
-            csrfInput.type = 'hidden';
-            csrfInput.name = 'csrf_token';
-            csrfInput.value = '{{ csrf_token }}';
-            form.appendChild(csrfInput);
-
-            document.body.appendChild(form);
-            form.submit();
+            fetch('/JobDatingV2/public/admin/applications/accept/' + id, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: 'csrf_token={{ csrf_token }}'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateApplicationStatus(id, data.status);
+                    showNotification('Application accepted successfully', 'success');
+                } else {
+                    showNotification(data.message || 'Failed to accept application', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('An error occurred while processing your request', 'error');
+            });
         }
     }
 
     function rejectApplication(id) {
         if (confirm('Are you sure you want to reject this application?')) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/JobDatingV2/public/admin/applications/reject/' + id;
-
-            const csrfInput = document.createElement('input');
-            csrfInput.type = 'hidden';
-            csrfInput.name = 'csrf_token';
-            csrfInput.value = '{{ csrf_token }}';
-            form.appendChild(csrfInput);
-
-            document.body.appendChild(form);
-            form.submit();
+            fetch('/JobDatingV2/public/admin/applications/reject/' + id, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: 'csrf_token={{ csrf_token }}'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateApplicationStatus(id, data.status);
+                    showNotification('Application rejected successfully', 'success');
+                } else {
+                    showNotification(data.message || 'Failed to reject application', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('An error occurred while processing your request', 'error');
+            });
         }
+    }
+
+    function resetApplication(id) {
+        if (confirm('Are you sure you want to reset this application to pending status?')) {
+            fetch('/JobDatingV2/public/admin/applications/reset/' + id, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: 'csrf_token={{ csrf_token }}'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateApplicationStatus(id, data.status);
+                    showNotification('Application reset to pending successfully', 'success');
+                } else {
+                    showNotification(data.message || 'Failed to reset application', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('An error occurred while processing your request', 'error');
+            });
+        }
+    }
+
+    function updateApplicationStatus(id, newStatus) {
+        const row = document.querySelector(`tr[data-application-id="${id}"]`);
+        if (!row) return;
+
+        // Update status badge
+        const statusCell = row.querySelector('td:nth-child(5)');
+        if (statusCell) {
+            let statusHtml = '';
+            if (newStatus === 'accepted') {
+                statusHtml = '<span class="status-badge status-accepted"><i class="fas fa-check-circle"></i> accepted</span>';
+            } else if (newStatus === 'rejected') {
+                statusHtml = '<span class="status-badge status-rejected"><i class="fas fa-times-circle"></i> rejected</span>';
+            } else if (newStatus === 'pending') {
+                statusHtml = '<span class="status-badge status-pending"><i class="fas fa-clock"></i> pending</span>';
+            }
+            statusCell.innerHTML = statusHtml;
+        }
+
+        // Update actions cell
+        const actionsCell = row.querySelector('td:nth-child(8)');
+        if (actionsCell) {
+            let actionsHtml = '';
+            if (newStatus === 'pending') {
+                actionsHtml = `
+                    <button onclick="acceptApplication(${id})" class="action-btn accept-btn">
+                        <i class="fas fa-check"></i> Accept
+                    </button>
+                    <button onclick="rejectApplication(${id})" class="action-btn reject-btn">
+                        <i class="fas fa-times"></i> Reject
+                    </button>
+                `;
+            } else if (newStatus === 'accepted' || newStatus === 'rejected') {
+                actionsHtml = `
+                    <button onclick="resetApplication(${id})" class="action-btn reset-btn">
+                        <i class="fas fa-undo"></i> Reset to Pending
+                    </button>
+                `;
+            } else {
+                actionsHtml = `<span class="action-disabled">${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}</span>`;
+            }
+            actionsCell.innerHTML = actionsHtml;
+        }
+
+        // Update modal if open
+        const modal = document.getElementById('studentModal');
+        if (modal && modal.style.display === 'block') {
+            const modalStatus = modal.querySelector('.modal-status');
+            if (modalStatus) {
+                let icon = 'fas fa-info-circle';
+                if (newStatus === 'accepted') icon = 'fas fa-check-circle';
+                if (newStatus === 'rejected') icon = 'fas fa-times-circle';
+                if (newStatus === 'pending') icon = 'fas fa-clock';
+                
+                modalStatus.innerHTML = `<i class="${icon}"></i> ${newStatus}`;
+            }
+
+            // Update modal actions
+            const modalActions = modal.querySelector('.modal-actions');
+            if (modalActions) {
+                let modalActionsHtml = '';
+                if (newStatus === 'pending') {
+                    modalActionsHtml = `
+                        <button class="modal-btn modal-btn-accept" onclick="acceptApplication(${id})">
+                            <i class="fas fa-check"></i> Accept Application
+                        </button>
+                        <button class="modal-btn modal-btn-reject" onclick="rejectApplication(${id})">
+                            <i class="fas fa-times"></i> Reject Application
+                        </button>
+                    `;
+                } else if (newStatus === 'accepted' || newStatus === 'rejected') {
+                    modalActionsHtml = `
+                        <button class="modal-btn modal-btn-reset" onclick="resetApplication(${id})" style="background: var(--color-warning); color: white;">
+                            <i class="fas fa-undo"></i> Reset to Pending
+                        </button>
+                    `;
+                }
+                modalActionsHtml += `
+                    <button class="modal-btn modal-btn-close" onclick="closeModal()">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                `;
+                modalActions.innerHTML = modalActionsHtml;
+            }
+        }
+
+        // Update applications data
+        if (applicationsById[id]) {
+            applicationsById[id].status = newStatus;
+        }
+    }
+
+    function showNotification(message, type) {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            ${message}
+        `;
+
+        // Add styles
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 20px;
+            background: ${type === 'success' ? '#059669' : '#DC2626'};
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            animation: slideInRight 0.3s ease-out;
+        `;
+
+        // Add animation keyframes
+        if (!document.querySelector('#notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'notification-styles';
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOutRight {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        document.body.appendChild(notification);
+
+        // Remove after 3 seconds
+        setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.3s ease-out';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
     }
 </script>
 </body>

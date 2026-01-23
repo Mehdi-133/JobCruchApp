@@ -137,6 +137,80 @@
             $this->view('front/jobs/show', ['job' => $job, 'page_type' => 'student']);
         }
 
+        public function applications()
+        {
+            // Check authentication
+            if (!Auth::check()) {
+                header('Location: /login');
+                exit;
+            }
+            
+            $user = Auth::user();
+            $applicationModel = new Application();
+            
+            // Get user's applications with details
+            $applications = $applicationModel->getAllApplicationsWithDetails();
+            
+            // Filter applications for current user
+            $userApplications = array_filter($applications, function($app) use ($user) {
+                return $app['user_id'] == $user['id'];
+            });
+            
+            // Re-index array
+            $userApplications = array_values($userApplications);
+            
+            if ($this->isAjaxRequest()) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => true,
+                    'applications' => $userApplications
+                ]);
+                return;
+            }
+            
+            $this->view('front/profile/applications', [
+                'applications' => $userApplications,
+                'user' => $user,
+                'csrf_token' => Security::getToken()
+            ]);
+        }
+
+        public function refreshApplications()
+        {
+            // Check authentication
+            if (!Auth::check()) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+                return;
+            }
+            
+            $user = Auth::user();
+            $applicationModel = new Application();
+            
+            // Get user's applications with details
+            $applications = $applicationModel->getAllApplicationsWithDetails();
+            
+            // Filter applications for current user
+            $userApplications = array_filter($applications, function($app) use ($user) {
+                return $app['user_id'] == $user['id'];
+            });
+            
+            // Re-index array
+            $userApplications = array_values($userApplications);
+            
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => true,
+                'applications' => $userApplications
+            ]);
+        }
+
+        private function isAjaxRequest()
+        {
+            return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+                   strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+        }
+
     }
 
 

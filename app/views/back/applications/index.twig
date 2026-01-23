@@ -189,8 +189,9 @@
             color: var(--color-neutral-600);
         }
 
-        .applications-table tr:hover {
+        .applications-table .application-row:hover {
             background: var(--color-neutral-50);
+            cursor: pointer;
         }
 
         .student-info {
@@ -226,6 +227,7 @@
         .status-badge {
             display: inline-flex;
             align-items: center;
+            gap: 4px;
             padding: 4px 8px;
             border-radius: var(--radius-sm);
             font-size: 12px;
@@ -274,6 +276,9 @@
             cursor: pointer;
             transition: all var(--transition-fast);
             margin-right: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .accept-btn {
@@ -338,6 +343,402 @@
             line-height: 1.6;
         }
 
+        /* Modern Modal Styles - FIXED SCROLL */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1050;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            outline: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn var(--transition-base);
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: white;
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 900px;
+            margin: 2rem auto;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp var(--transition-smooth);
+            overflow: hidden;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-lg);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .modal-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #6366F1, #8B5CF6, #EC4899);
+        }
+
+        .modal-header-content {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-lg);
+        }
+
+        .modal-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 28px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+        }
+
+        .modal-header-text {
+            flex: 1;
+        }
+
+        .modal-header h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+            letter-spacing: -0.01em;
+        }
+
+        .modal-header p {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0 0 12px 0;
+        }
+
+        .modal-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-status i {
+            font-size: 10px;
+        }
+
+        .modal-body {
+            padding: var(--spacing-xl);
+            overflow-y: auto;
+            flex: 1;
+            max-height: calc(90vh - 200px); /* Fixed height for scrollable area */
+        }
+
+        .modal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .modal-section {
+            background: var(--color-neutral-50);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--color-neutral-200);
+            overflow: visible; /* Changed from hidden */
+        }
+
+        .modal-section h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-neutral-700);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 0 0 var(--spacing-md) 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-section h4 i {
+            color: var(--color-primary);
+            font-size: 13px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 8px 12px;
+            align-items: start;
+        }
+
+        .info-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--color-neutral-600);
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-neutral-900);
+            word-break: break-word;
+        }
+
+        .info-value a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color var(--transition-fast);
+        }
+
+        .info-value a:hover {
+            color: var(--color-primary-hover);
+            text-decoration: underline;
+        }
+
+        .info-value a i {
+            margin-left: 4px;
+            font-size: 11px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-lg);
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--color-neutral-200);
+            flex-shrink: 0;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: var(--spacing-md);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .modal-btn-accept {
+            background: var(--color-success);
+            color: white;
+        }
+
+        .modal-btn-accept:hover {
+            background: #047857;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+        }
+
+        .modal-btn-reject {
+            background: var(--color-danger);
+            color: white;
+        }
+
+        .modal-btn-reject:hover {
+            background: #B91C1C;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+
+        .modal-btn-close {
+            background: var(--color-neutral-200);
+            color: var(--color-neutral-700);
+        }
+
+        .modal-btn-close:hover {
+            background: var(--color-neutral-300);
+            transform: translateY(-1px);
+        }
+
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            z-index: 2;
+        }
+
+        .close-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .badge-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .info-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .info-badge i {
+            font-size: 9px;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 24px;
+            margin-top: var(--spacing-md);
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--color-neutral-300);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px var(--color-primary);
+        }
+
+        .timeline-date {
+            font-size: 11px;
+            color: var(--color-neutral-500);
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .timeline-content {
+            font-size: 13px;
+            color: var(--color-neutral-700);
+        }
+
+        /* Motivation Letter Styles */
+        .motivation-letter {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--color-neutral-200);
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--color-neutral-700);
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .motivation-letter h5 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-neutral-700);
+            margin-bottom: var(--spacing-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Scrollbar Styling */
+        .modal-body::-webkit-scrollbar,
+        .motivation-letter::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-body::-webkit-scrollbar-track,
+        .motivation-letter::-webkit-scrollbar-track {
+            background: var(--color-neutral-100);
+            border-radius: 4px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb,
+        .motivation-letter::-webkit-scrollbar-thumb {
+            background: var(--color-neutral-300);
+            border-radius: 4px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb:hover,
+        .motivation-letter::-webkit-scrollbar-thumb:hover {
+            background: var(--color-neutral-400);
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .page-container {
                 padding: var(--spacing-lg) var(--spacing-md);
@@ -354,6 +755,82 @@
             .applications-table th,
             .applications-table td {
                 padding: var(--spacing-sm);
+            }
+
+            .modal {
+                padding: 10px;
+            }
+
+            .modal-content {
+                margin: 1rem auto;
+                max-height: 95vh;
+            }
+
+            .modal-body {
+                max-height: calc(95vh - 180px);
+                padding: var(--spacing-lg);
+            }
+
+            .modal-header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--spacing-md);
+            }
+
+            .modal-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 22px;
+                margin: 0 auto;
+            }
+
+            .modal-header h3 {
+                font-size: 20px;
+            }
+
+            .modal-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-lg);
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+
+            .close-button {
+                top: 12px;
+                right: 12px;
+                width: 32px;
+                height: 32px;
+                font-size: 18px;
+            }
+
+            .motivation-letter {
+                max-height: 250px;
+                padding: var(--spacing-md);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-header {
+                padding: var(--spacing-lg);
+            }
+
+            .modal-body {
+                padding: var(--spacing-md);
+            }
+
+            .modal-section {
+                padding: var(--spacing-md);
+            }
+
+            .motivation-letter {
+                max-height: 200px;
             }
         }
     </style>
@@ -392,63 +869,75 @@
                     Student Applications
                 </h2>
             </div>
-            
+
             <table class="applications-table">
                 <thead>
-                    <tr>
-                        <th>Student</th>
-                        <th>Job Position</th>
-                        <th>Company</th>
-                        <th>Applied Date</th>
-                        <th>Status</th>
-                        <th>Speciality</th>
-                        <th>Promo</th>
-                        <th>Actions</th>
-                    </tr>
+                <tr>
+                    <th>Student</th>
+                    <th>Job Position</th>
+                    <th>Company</th>
+                    <th>Applied Date</th>
+                    <th>Status</th>
+                    <th>Speciality</th>
+                    <th>Promo</th>
+                    <th>Actions</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for application in applications %}
-                        <tr>
-                            <td>
-                                <div class="student-info">
-                                    <div class="student-avatar">
-                                        {{ application.student_name|first|upper }}
-                                    </div>
-                                    <div class="student-details">
-                                        <h4>{{ application.student_name }}</h4>
-                                        <p>{{ application.student_email }}</p>
-                                    </div>
+                {% for application in applications %}
+                    <tr class="application-row" data-application-id="{{ application.id }}">
+                        <td>
+                            <div class="student-info">
+                                <div class="student-avatar">
+                                    {{ application.student_name|first|upper }}
                                 </div>
-                            </td>
-                            <td>
-                                <div class="job-info">{{ application.job_title }}</div>
-                                <div class="company-name">{{ application.contract_type }}</div>
-                            </td>
-                            <td>{{ application.company_name }}</td>
-                            <td>
-                                <div class="date-info">{{ application.applied_at|date('M d, Y') }}</div>
-                            </td>
-                            <td>
-                                <span class="status-badge status-{{ application.status|lower }}">
-                                    {{ application.status }}
+                                <div class="student-details">
+                                    <h4>{{ application.student_name }}</h4>
+                                    <p>{{ application.student_email }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="job-info">{{ application.job_title }}</div>
+                            <div class="company-name">{{ application.contract_type }}</div>
+                        </td>
+                        <td>{{ application.company_name }}</td>
+                        <td>
+                            <div class="date-info">{{ application.applied_at|date('M d, Y') }}</div>
+                        </td>
+                        <td>
+                            {% if application.status == 'pending' %}
+                                <span class="status-badge status-pending">
+                                    <i class="fas fa-clock"></i> {{ application.status }}
                                 </span>
-                            </td>
-                            <td>{{ application.speciality ?? 'N/A' }}</td>
-                            <td>{{ application.promo ?? 'N/A' }}</td>
-                            <td>
-                                {% if application.status == 'pending' %}
-                                    <button onclick="acceptApplication({{ application.id }})" class="action-btn accept-btn">
-                                        <i class="fas fa-check"></i> Accept
-                                    </button>
-                                    <button onclick="rejectApplication({{ application.id }})" class="action-btn reject-btn">
-                                        <i class="fas fa-times"></i> Reject
-                                    </button>
-                                {% else %}
-                                    <span class="action-disabled">{{ application.status|title }}</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
+                            {% elseif application.status == 'accepted' %}
+                                <span class="status-badge status-accepted">
+                                    <i class="fas fa-check-circle"></i> {{ application.status }}
+                                </span>
+                            {% elseif application.status == 'rejected' %}
+                                <span class="status-badge status-rejected">
+                                    <i class="fas fa-times-circle"></i> {{ application.status }}
+                                </span>
+                            {% else %}
+                                <span class="status-badge">{{ application.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ application.speciality ?? 'N/A' }}</td>
+                        <td>{{ application.promo ?? 'N/A' }}</td>
+                        <td>
+                            {% if application.status == 'pending' %}
+                                <button onclick="acceptApplication({{ application.id }})" class="action-btn accept-btn">
+                                    <i class="fas fa-check"></i> Accept
+                                </button>
+                                <button onclick="rejectApplication({{ application.id }})" class="action-btn reject-btn">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                            {% else %}
+                                <span class="action-disabled">{{ application.status|title }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -463,6 +952,237 @@
     {% endif %}
 </div>
 
+<!-- Modern Student Details Modal -->
+<div id="studentModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <div id="modal-body">
+            <!-- Dynamic content will be injected here -->
+        </div>
+    </div>
+</div>
+
 {% include 'back/assets/footer.twig' %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('studentModal');
+        const modalBody = document.getElementById('modal-body');
+        const closeButton = document.querySelector('#studentModal .close-button');
+
+        const applications = {{ applications|json_encode|raw }};
+        const applicationsById = {};
+        if (Array.isArray(applications)) {
+            applications.forEach(app => {
+                applicationsById[app.id] = app;
+            });
+        }
+
+        document.querySelectorAll('.application-row').forEach(row => {
+            row.style.cursor = 'pointer';
+            row.addEventListener('click', function(event) {
+                if (event.target.closest('a, button')) {
+                    return;
+                }
+
+                const appId = this.dataset.applicationId;
+                const app = applicationsById[appId];
+
+                if (app) {
+                    openApplicationModal(app);
+                }
+            });
+        });
+
+        function closeModal() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        if(closeButton) {
+            closeButton.addEventListener('click', closeModal);
+        }
+
+        window.addEventListener('click', function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        });
+
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && modal.style.display === 'block') {
+                closeModal();
+            }
+        });
+
+        function openApplicationModal(app) {
+            let statusIcon = 'fas fa-info-circle';
+            if (app.status.toLowerCase().includes('pending')) statusIcon = 'fas fa-clock';
+            if (app.status.toLowerCase().includes('accepted')) statusIcon = 'fas fa-check-circle';
+            if (app.status.toLowerCase().includes('rejected')) statusIcon = 'fas fa-times-circle';
+
+            modalBody.innerHTML = `
+            <div class="modal-header">
+                <div class="modal-header-content">
+                    <div class="modal-avatar">
+                        ${app.student_name.charAt(0).toUpperCase()}
+                    </div>
+                    <div class="modal-header-text">
+                        <h3>${app.student_name}</h3>
+                        <p>${app.student_email}</p>
+                        <div class="badge-group">
+                            <span class="modal-status">
+                                <i class="${statusIcon}"></i>
+                                ${app.status}
+                            </span>
+                            <span class="info-badge">
+                                <i class="fas fa-graduation-cap"></i> ${app.promo || 'N/A'}
+                            </span>
+                            <span class="info-badge">
+                                <i class="fas fa-code"></i> ${app.speciality || 'N/A'}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-grid">
+                    <div class="modal-section">
+                        <h4><i class="fas fa-user-graduate"></i> Student Information</h4>
+                        <div class="info-grid">
+                            <div class="info-label">Speciality:</div>
+                            <div class="info-value">${app.speciality || 'N/A'}</div>
+
+                            <div class="info-label">Promo:</div>
+                            <div class="info-value">${app.promo || 'N/A'}</div>
+
+                            <div class="info-label">Email:</div>
+                            <div class="info-value">${app.student_email}</div>
+
+                            <div class="info-label">Applied Date:</div>
+                            <div class="info-value">${new Date(app.applied_at).toLocaleDateString()}</div>
+                        </div>
+                    </div>
+
+                    <div class="modal-section">
+                        <h4><i class="fas fa-briefcase"></i> Job Details</h4>
+                        <div class="info-grid">
+                            <div class="info-label">Position:</div>
+                            <div class="info-value">${app.job_title}</div>
+
+                            <div class="info-label">Company:</div>
+                            <div class="info-value">${app.company_name}</div>
+
+                            <div class="info-label">Contract Type:</div>
+                            <div class="info-value">${app.contract_type}</div>
+
+                            <div class="info-label">Status:</div>
+                            <div class="info-value">${app.status}</div>
+                        </div>
+                    </div>
+
+                    <div class="modal-section">
+                        <h4><i class="fas fa-history"></i> Timeline</h4>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-date">${new Date(app.applied_at).toLocaleDateString()}</div>
+                                <div class="timeline-content">Application submitted</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">Currently</div>
+                                <div class="timeline-content">Status: ${app.status}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-section">
+                        <h4><i class="fas fa-file-alt"></i> Documents</h4>
+                        <div class="info-grid">
+                            <div class="info-label">Resume:</div>
+                            <div class="info-value">
+                                ${app.cv_path ? `<a href="/JobDatingV2/public/${app.cv_path}" target="_blank" onclick="event.stopPropagation();">View CV <i class="fas fa-external-link-alt"></i></a>` : 'Not provided'}
+                            </div>
+
+                            <div class="info-label">LinkedIn:</div>
+                            <div class="info-value">
+                                <a href="#" target="_blank" onclick="event.stopPropagation();">
+                                    View Profile <i class="fab fa-linkedin"></i>
+                                </a>
+                            </div>
+
+                            <div class="info-label">Portfolio:</div>
+                            <div class="info-value">
+                                <a href="#" target="_blank" onclick="event.stopPropagation();">
+                                    View Portfolio <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h4><i class="fas fa-envelope-open-text"></i> Motivation Letter</h4>
+                    <div class="motivation-letter">
+                        ${app.cover_letter || 'No motivation letter provided.'}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                ${app.status === 'pending' ? `
+                <button class="modal-btn modal-btn-accept" onclick="acceptApplication(${app.id})">
+                    <i class="fas fa-check"></i> Accept Application
+                </button>
+                <button class="modal-btn modal-btn-reject" onclick="rejectApplication(${app.id})">
+                    <i class="fas fa-times"></i> Reject Application
+                </button>
+                ` : ''}
+                <button class="modal-btn modal-btn-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        `;
+
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            modal.focus();
+        }
+
+        window.closeModal = closeModal;
+    });
+
+    function acceptApplication(id) {
+        if (confirm('Are you sure you want to accept this application?')) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/JobDatingV2/public/admin/applications/accept/' + id;
+
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrf_token';
+            csrfInput.value = '{{ csrf_token }}';
+            form.appendChild(csrfInput);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+
+    function rejectApplication(id) {
+        if (confirm('Are you sure you want to reject this application?')) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/JobDatingV2/public/admin/applications/reject/' + id;
+
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrf_token';
+            csrfInput.value = '{{ csrf_token }}';
+            form.appendChild(csrfInput);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>
 </body>
 </html>

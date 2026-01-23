@@ -42,7 +42,8 @@ class Application extends Model
                     an.contract as contract_type,
                     c.name as company_name,
                     a.applied_at,
-                    a.status
+                    a.status,
+                    a.cover_letter
              FROM {$this->table} a 
              LEFT JOIN users u ON a.user_id = u.id 
              LEFT JOIN annonces an ON a.annonce_id = an.id

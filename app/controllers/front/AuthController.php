@@ -14,7 +14,7 @@ class AuthController extends Controller
     public function showRegister()
     {
         $token = Security::getToken();
-        $this->view('front/auth/register', ['csrf_token' => $token]);
+        $this->view('front/auth/register', ['csrf_token' => $token, 'page_type' => 'auth']);
     }
 
     public function register()
@@ -40,7 +40,8 @@ class AuthController extends Controller
             $this->view('front/auth/register', [
                 'errors' => $validator->errors(),
                 'csrf_token' => $token,
-                'old' => $_POST
+                'old' => $_POST,
+                'page_type' => 'auth'
             ]);
             return;
         }
@@ -59,7 +60,8 @@ class AuthController extends Controller
                 $this->view('front/auth/register', [
                     'errors' => ['profile_image' => ['Invalid file type. Only JPG, PNG, and GIF are allowed.']],
                     'csrf_token' => $token,
-                    'old' => $_POST
+                    'old' => $_POST,
+                    'page_type' => 'auth'
                 ]);
                 return;
             }
@@ -69,7 +71,8 @@ class AuthController extends Controller
                 $this->view('front/auth/register', [
                     'errors' => ['profile_image' => ['File size must not exceed 2MB.']],
                     'csrf_token' => $token,
-                    'old' => $_POST
+                    'old' => $_POST,
+                    'page_type' => 'auth'
                 ]);
                 return;
             }
@@ -115,7 +118,7 @@ class AuthController extends Controller
     public function showLogin()
     {
         $token = Security::getToken();
-        $this->view('front/auth/login', ['csrf_token' => $token]);
+        $this->view('front/auth/login', ['csrf_token' => $token, 'page_type' => 'auth']);
     }
 
     public function login()
@@ -135,7 +138,8 @@ class AuthController extends Controller
             $this->view('front/auth/login', [
                 'errors' => $validator->errors(),
                 'csrf_token' => $token,
-                'old' => $_POST
+                'old' => $_POST,
+                'page_type' => 'auth'
             ]);
             return;
         }
@@ -147,7 +151,8 @@ class AuthController extends Controller
             $this->view('front/auth/login', [
                 'error' => 'Invalid email or password',
                 'csrf_token' => $token,
-                'old' => $_POST
+                'old' => $_POST,
+                'page_type' => 'auth'
             ]);
         }
     }

@@ -225,4 +225,66 @@ class Application extends Model
     {
         return $this->delete($id);
     }
+
+    /**
+     * Get applications by user ID with job details
+     */
+    public function getByUserIdWithDetails($userId)
+    {
+        $stmt = $this->dbInstance->secureQuery(
+            "SELECT a.*, 
+                    an.title as job_title, 
+                    an.description as job_description,
+                    an.contract as contract_type,
+                    an.location,
+                    an.skills_required,
+                    c.name as company_name,
+                    c.email as company_email
+             FROM {$this->table} a 
+             LEFT JOIN annonces an ON a.annonce_id = an.id
+             LEFT JOIN companys c ON an.company = c.id
+             WHERE a.user_id = ?
+             ORDER BY a.applied_at DESC",
+            [$userId]
+        );
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get applications by user ID and status
+     */
+    public function getByUserIdAndStatus($userId, $status)
+    {
+        $stmt = $this->dbInstance->secureQuery(
+            "SELECT * FROM {$this->table} 
+             WHERE user_id = ? AND status = ?
+             LIMIT 1",
+            [$userId, $status]
+        );
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get count of applications by user ID
+     */
+    public function getCountByUserId($userId)
+    {
+        $stmt = $this->dbInstance->secureQuery(
+            "SELECT COUNT(*) as count FROM {$this->table} WHERE user_id = ?",
+            [$userId]
+        );
+        return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+    }
+
+    /**
+     * Get count of applications by user ID and status
+     */
+    public function getCountByUserIdAndStatus($userId, $status)
+    {
+        $stmt = $this->dbInstance->secureQuery(
+            "SELECT COUNT(*) as count FROM {$this->table} WHERE user_id = ? AND status = ?",
+            [$userId, $status]
+        );
+        return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+    }
 }

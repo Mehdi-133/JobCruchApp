@@ -90,6 +90,8 @@ class AuthController extends Controller
             
             if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $destination)) {
                 $profileImage = 'uploads/profiles/' . $filename;
+            } else {
+                error_log('Profile image upload failed during registration. Destination: ' . $destination);
             }
         }
 

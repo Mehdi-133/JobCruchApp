@@ -19,19 +19,87 @@
     </header>
 
     <!-- Alert Messages -->
-    {% if hasApplied %}
+    {% if hasAccepted %}
         <div class="alert alert-info">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
             </svg>
-            <span>You have already applied to a job. You can only apply to one position.</span>
+            <span>You have been accepted to a position. You cannot apply to other jobs.</span>
         </div>
     {% endif %}
+
+    <!-- Filter Section -->
+    <section class="filter-section">
+        <div class="filter-header">
+            <h2>Filter Job Offers</h2>
+            <button class="btn-reset-filters" onclick="resetFilters()">Reset Filters</button>
+        </div>
+        
+        <div class="filters-container">
+            <!-- Search Filter -->
+            <div class="filter-group">
+                <label for="searchFilter">Search by Title or Company</label>
+                <input 
+                    type="text" 
+                    id="searchFilter" 
+                    class="filter-input" 
+                    placeholder="Search jobs..."
+                    oninput="applyFilters()"
+                >
+            </div>
+
+            <!-- Location Filter -->
+            <div class="filter-group">
+                <label for="locationFilter">Location</label>
+                <select id="locationFilter" class="filter-select" onchange="applyFilters()">
+                    <option value="">All Locations</option>
+                    {% set locations = [] %}
+                    {% for job in jobs %}
+                        {% if job.location not in locations %}
+                            {% set locations = locations|merge([job.location]) %}
+                            <option value="{{ job.location }}">{{ job.location }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Contract Type Filter -->
+            <div class="filter-group">
+                <label for="contractFilter">Contract Type</label>
+                <select id="contractFilter" class="filter-select" onchange="applyFilters()">
+                    <option value="">All Types</option>
+                    {% set contracts = [] %}
+                    {% for job in jobs %}
+                        {% if job.contract not in contracts %}
+                            {% set contracts = contracts|merge([job.contract]) %}
+                            <option value="{{ job.contract }}">{{ job.contract }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Status Filter -->
+            <div class="filter-group">
+                <label for="statusFilter">Status</label>
+                <select id="statusFilter" class="filter-select" onchange="applyFilters()">
+                    <option value="">All Statuses</option>
+                    <option value="open">Open</option>
+                    <option value="applied">Applied</option>
+                    <option value="closed">Closed</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Summary -->
+    <div class="filter-results">
+        <p><span id="resultsCount">{{ jobs|length }}</span> job(s) found</p>
+    </div>
 
     <!-- Jobs Grid -->
     <div class="jobs-grid">
         {% for job in jobs %}
-            <div class="job-card {% if job.id == appliedJobId %}applied{% elseif not job.is_active %}inactive{% endif %}">
+            <div class="job-card {% if job.id == acceptedJobId %}applied{% elseif job.id in appliedJobIds %}applied-other{% elseif not job.is_active %}inactive{% endif %}">
                 <!-- Company Badge -->
                 <div class="company-badge">
                     <div class="company-icon">
@@ -78,14 +146,21 @@
 
                 <!-- Action Button -->
                 <div class="card-actions">
-                    {% if job.id == appliedJobId %}
+                    {% if job.id == acceptedJobId %}
+                        <button class="btn-applied" disabled>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            Accepted
+                        </button>
+                    {% elseif job.id in appliedJobIds %}
                         <button class="btn-applied" disabled>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                             </svg>
                             Already Applied
                         </button>
-                    {% elseif hasApplied %}
+                    {% elseif hasAccepted %}
                         <button class="btn-disabled" disabled>Apply Now</button>
                     {% elseif not job.is_active %}
                         <button class="btn-disabled" disabled>Closed</button>
@@ -268,6 +343,11 @@
 .job-card.applied {
     border: 2px solid #48bb78;
     background: #f0fff4;
+}
+
+.job-card.applied-other {
+    border: 2px solid #4299e1;
+    background: #ebf8ff;
 }
 
 .job-card.inactive {
@@ -645,7 +725,109 @@ textarea:focus {
     .modal-content {
         margin: 10% 1rem;
     }
+
+    .filters-container {
+        grid-template-columns: 1fr;
+    }
 }
+
+/* Filter Styles */
+.filter-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.filter-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1a202c;
+    margin: 0;
+}
+
+.btn-reset-filters {
+    padding: 0.5rem 1rem;
+    background: #edf2f7;
+    color: #667eea;
+    border: 1px solid #cbd5e0;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-reset-filters:hover {
+    background: #e2e8f0;
+    border-color: #667eea;
+}
+
+.filters-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    font-weight: 500;
+    color: #4a5568;
+    font-size: 0.875rem;
+}
+
+.filter-input,
+.filter-select {
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.filter-input:focus,
+.filter-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.filter-input::placeholder {
+    color: #a0aec0;
+}
+
+.filter-results {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f7fafc;
+    border-left: 4px solid #667eea;
+    border-radius: 8px;
+}
+
+.filter-results p {
+    margin: 0;
+    color: #4a5568;
+    font-weight: 500;
+}
+
+#resultsCount {
+    color: #667eea;
+    font-weight: 600;
+}
+
 </style>
 
 <script>
@@ -673,6 +855,82 @@ window.onclick = function(event) {
     if (event.target == modal) {
         closeApplyModal();
     }
+}
+
+// Filter Functions
+function applyFilters() {
+    const searchTerm = document.getElementById('searchFilter').value.toLowerCase();
+    const locationFilter = document.getElementById('locationFilter').value.toLowerCase();
+    const contractFilter = document.getElementById('contractFilter').value.toLowerCase();
+    const statusFilter = document.getElementById('statusFilter').value.toLowerCase();
+    
+    const jobCards = document.querySelectorAll('.job-card');
+    let visibleCount = 0;
+    
+    jobCards.forEach(card => {
+        const jobTitle = card.querySelector('.job-title').textContent.toLowerCase();
+        const companyName = card.querySelector('.company-info h3').textContent.toLowerCase();
+        const location = card.querySelector('.location').textContent.toLowerCase();
+        const contract = card.querySelector('.contract-badge').textContent.toLowerCase();
+        const isApplied = card.classList.contains('applied-other');
+        const isAccepted = card.classList.contains('applied');
+        const isClosed = card.classList.contains('inactive');
+        
+        let matchesSearch = jobTitle.includes(searchTerm) || companyName.includes(searchTerm);
+        let matchesLocation = !locationFilter || location.includes(locationFilter);
+        let matchesContract = !contractFilter || contract.includes(contractFilter);
+        let matchesStatus = true;
+        
+        if (statusFilter === 'applied') {
+            matchesStatus = isApplied;
+        } else if (statusFilter === 'closed') {
+            matchesStatus = isClosed;
+        } else if (statusFilter === 'open') {
+            matchesStatus = !isApplied && !isAccepted && !isClosed;
+        }
+        
+        const shouldShow = matchesSearch && matchesLocation && matchesContract && matchesStatus;
+        
+        if (shouldShow) {
+            card.style.display = '';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+    
+    // Update results count
+    document.getElementById('resultsCount').textContent = visibleCount;
+    
+    // Show no results message if needed
+    const jobsGrid = document.querySelector('.jobs-grid');
+    if (visibleCount === 0) {
+        if (!document.getElementById('noResults')) {
+            const noResults = document.createElement('div');
+            noResults.id = 'noResults';
+            noResults.style.cssText = 'grid-column: 1/-1; text-align: center; padding: 3rem 1rem; color: #718096;';
+            noResults.innerHTML = '<p style="font-size: 1.125rem; font-weight: 500;">No jobs match your filters. Try adjusting your search.</p>';
+            jobsGrid.appendChild(noResults);
+        }
+    } else {
+        const noResults = document.getElementById('noResults');
+        if (noResults) noResults.remove();
+    }
+}
+
+function resetFilters() {
+    document.getElementById('searchFilter').value = '';
+    document.getElementById('locationFilter').value = '';
+    document.getElementById('contractFilter').value = '';
+    document.getElementById('statusFilter').value = '';
+    
+    const jobCards = document.querySelectorAll('.job-card');
+    jobCards.forEach(card => card.style.display = '');
+    
+    document.getElementById('resultsCount').textContent = jobCards.length;
+    
+    const noResults = document.getElementById('noResults');
+    if (noResults) noResults.remove();
 }
 </script>
 {% endblock %}

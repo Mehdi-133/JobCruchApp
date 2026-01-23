@@ -13,6 +13,17 @@ use App\core\Auth;
 
 $router = Router::getRouter();
 
+// Home route
+$router->get('', function() {
+    if (!Auth::check()) {
+        header('Location: /login');
+        exit;
+    }
+
+    $controller = new JobController();
+    $controller->profile();
+});
+
 $router->get('register', [AuthController::class, 'showRegister']);
 $router->post('register', [AuthController::class, 'register']);
 $router->get('login', [AuthController::class, 'showLogin']);
@@ -43,6 +54,39 @@ $router->get('jobs/{id}', function($id) {
 
 // Job application route
 $router->post('jobs/apply', [JobController::class, 'apply']);
+
+// My applications route
+$router->get('my-applications', function() {
+    if (!Auth::check()) {
+        header('Location: /login');
+        exit;
+    }
+
+    $controller = new JobController();
+    $controller->myApplications();
+});
+
+// Profile route
+$router->get('profile', function() {
+    if (!Auth::check()) {
+        header('Location: /login');
+        exit;
+    }
+
+    $controller = new JobController();
+    $controller->profile();
+});
+
+// Update profile route
+$router->post('profile/update', function() {
+    if (!Auth::check()) {
+        header('Location: /login');
+        exit;
+    }
+
+    $controller = new JobController();
+    $controller->updateProfile();
+});
 
 // Admin routes
 $router->get('admin/login', [AdminAuthController::class, 'showLogin']);

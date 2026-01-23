@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS USERS (
     email VARCHAR(100) NOT NULL UNIQUE,
     name VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    promotion VARCHAR(50) DEFAULT NULL,
+    promo VARCHAR(50) DEFAULT NULL,
     speciality VARCHAR(100) DEFAULT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -73,16 +73,16 @@ INSERT INTO companys (name, sector, address, phone, email) VALUES
 ('FinancePros', 'Finance', '321 Finance Blvd, Chicago, IL', '444-555-6666', 'info@financepros.com'),
 ('RetailMart', 'Retail', '654 Retail Ln, Los Angeles, CA', '333-222-1111', 'info@retailmart.com');
 
-INSERT INTO annonces (title, description, company, contract, location, skills_required, expires_at) VALUES
-('Software Engineer', 'Develop and maintain web applications.', 1, 'CDI', 'Silicon Valley, CA', 'PHP, JavaScript, SQL', '2024-12-31 23:59:59'),
-('Nurse Practitioner', 'Provide healthcare services to patients.', 2, 'CDD', 'New York, NY', 'Nursing License, Patient Care', '2024-11-30 23:59:59'),
-('Math Teacher', 'Teach mathematics to high school students.', 3, 'Internship', 'Boston, MA', 'Teaching Certification, Math Skills', '2024-10-31 23:59:59'),
-('Financial Analyst', 'Analyze financial data and trends.', 4, 'Freelance', 'Chicago, IL', 'Finance Degree, Analytical Skills', '2024-09-30 23:59:59'),
-('Store Manager', 'Oversee daily operations of the retail store.', 5, 'CDI', 'Los Angeles, CA', 'Management Experience, Customer Service', '2024-12-15 23:59:59');
+INSERT INTO annonces (title, description, company, contract, location, skills_required) VALUES
+('Software Engineer', 'Develop and maintain web applications.', 1, 'CDI', 'Silicon Valley, CA', 'PHP, JavaScript, SQL'),
+('Nurse Practitioner', 'Provide healthcare services to patients.', 2, 'CDD', 'New York, NY', 'Nursing License, Patient Care'),
+('Math Teacher', 'Teach mathematics to high school students.', 3, 'Internship', 'Boston, MA', 'Teaching Certification, Math Skills'),
+('Financial Analyst', 'Analyze financial data and trends.', 4, 'Freelance', 'Chicago, IL', 'Finance Degree, Analytical Skills'),
+('Store Manager', 'Oversee daily operations of the retail store.', 5, 'CDI', 'Los Angeles, CA', 'Management Experience, Customer Service');
 
 
 --@block
-ALTER TABLE users ADD COLUMN profile_image VARCHAR(255) DEFAULT NULL AFTER promotion;
+ALTER TABLE users ADD COLUMN profile_image VARCHAR(255) DEFAULT NULL AFTER promo;
 
 --@block
 ALTER TABLE applications ADD COLUMN cv_path VARCHAR(255) DEFAULT NULL AFTER applied_at;

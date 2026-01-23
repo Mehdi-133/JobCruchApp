@@ -36,7 +36,8 @@
                 'hasApplied' => $hasApplied,
                 'appliedJobId' => $appliedJobId,
                 'user' => $user,
-                'csrf_token' => Security::getToken()
+                'csrf_token' => Security::getToken(),
+                'page_type' => 'student'
             ]);
         }
 
@@ -133,7 +134,7 @@
             }
             
             // Render the job details view
-            $this->view('front/jobs/show', ['job' => $job]);
+            $this->view('front/jobs/show', ['job' => $job, 'page_type' => 'student']);
         }
 
     }

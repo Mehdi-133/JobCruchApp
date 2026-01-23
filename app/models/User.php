@@ -13,7 +13,7 @@ class User extends Model
     const ROLE_STUDENT = 'student';
 
     // Fillable attributes
-    protected $fillable = ['email', 'name', 'password', 'role', 'profile_image'];
+    protected $fillable = ['email', 'name', 'password', 'role', 'profile_image', 'speciality', 'promo'];
 
     // Attributes
     protected $id;

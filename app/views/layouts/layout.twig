@@ -43,13 +43,20 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+        }
+
+        body.auth-page {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        body.student-page {
+            background: #f9fafb;
         }
 
         /* Main Content */
@@ -59,6 +66,11 @@
             align-items: center;
             justify-content: center;
             padding: 2rem;
+        }
+
+        main.student-main {
+            padding: 0;
+            display: block;
         }
 
         /* Auth Container - Split Screen */
@@ -447,11 +459,19 @@
     
     {% block styles %}{% endblock %}
 </head>
-<body>
+<body {% if page_type == 'student' %}class="student-page"{% else %}class="auth-page"{% endif %}>
+    {% if page_type == 'student' %}
+        {% include "front/assets/navbar.twig" %}
+    {% endif %}
+    
     <!-- Main Content -->
-    <main>
+    <main {% if page_type == 'student' %}class="student-main"{% endif %}>
         {% block content %}{% endblock %}
     </main>
+
+    {% if page_type == 'student' %}
+        {% include "front/assets/footer.twig" %}
+    {% endif %}
 
     {% block scripts %}{% endblock %}
 </body>

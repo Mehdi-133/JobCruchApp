@@ -26,19 +26,6 @@ class AnnouncementController extends Controller
         ]);
     }
 
-
-    public function create()
-    {
-        $companyModel = new Company();
-        $companies = $companyModel->All();
-
-        $this->view('back/announcements/create', [
-            'current_page' => 'announcements',
-            'companies' => $companies,
-            'csrf_token' => Security::getToken()
-        ]);
-    }
-
     public function store()
     {
         if (!Security::validateToken($_POST['csrf_token'] ?? '')) {
@@ -52,20 +39,12 @@ class AnnouncementController extends Controller
             ->required('company')
             ->required('contract')
             ->in('contract', ['CDI', 'CDD', 'Internship', 'Freelance'])
-            ->required('location')
-            ->required('expires_at');
+            ->required('location');
 
         if ($validator->fails()) {
-            $companyModel = new Company();
-            $companies = $companyModel->All();
-
-            $this->view('back/announcements/create', [
-                'current_page' => 'announcements',
-                'companies' => $companies,
-                'errors' => $validator->errors(),
-                'old' => $_POST,
-                'csrf_token' => Security::getToken()
-            ]);
+            $_SESSION['errors'] = $validator->errors();
+            $_SESSION['old'] = $_POST;
+            $this->redirect('admin/announcements');
             return;
         }
 
@@ -77,11 +56,11 @@ class AnnouncementController extends Controller
             'contract' => Security::sanitize($_POST['contract']),
             'location' => Security::sanitize($_POST['location']),
             'skills_required' => Security::sanitize($_POST['skills_required'] ?? ''),
-            'expires_at' => $_POST['expires_at'],
             'posted_at' => date('Y-m-d H:i:s'),
             'is_active' => 1
         ]);
 
+        $_SESSION['success'] = 'Announcement created successfully!';
         $this->redirect('admin/announcements');
     }
 
@@ -114,7 +93,7 @@ class AnnouncementController extends Controller
             'contract' => Security::sanitize($_POST['contract']),
             'location' => Security::sanitize($_POST['location']),
             'skills_required' => Security::sanitize($_POST['skills_required'] ?? ''),
-            'expires_at' => $_POST['expires_at']
+            // 'expires_at' => $_POST['expires_at']
         ]);
 
         $this->redirect('admin/announcements');

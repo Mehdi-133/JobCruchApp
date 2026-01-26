@@ -55,6 +55,39 @@ $router->get('jobs/{id}', function($id) {
 // Job application route
 $router->post('jobs/apply', [JobController::class, 'apply']);
 
+// My applications route
+$router->get('my-applications', function() {
+    if (!Auth::check()) {
+        header('Location: /login');
+        exit;
+    }
+
+    $controller = new JobController();
+    $controller->applications();
+});
+
+// Profile routes
+$router->get('profile', function() {
+    if (!Auth::check()) {
+        header('Location: /login');
+        exit;
+    }
+
+    $controller = new JobController();
+    $controller->profile();
+});
+
+// Update profile route
+$router->post('profile/update', function() {
+    if (!Auth::check()) {
+        header('Location: /login');
+        exit;
+    }
+
+    $controller = new JobController();
+    $controller->updateProfile();
+});
+
 // Student applications routes
 $router->get('student/applications', [JobController::class, 'applications']);
 $router->get('student/applications/refresh', [JobController::class, 'refreshApplications']);

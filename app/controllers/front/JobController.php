@@ -161,6 +161,126 @@
             $this->view('front/jobs/show', ['job' => $job, 'page_type' => 'student']);
         }
 
+        public function profile()
+        {
+            // Check if user is authenticated
+            if (!Auth::check()) {
+                header('Location: /login');
+                exit;
+            }
+
+            $user = Auth::user();
+            
+            // Get fresh user data from database to ensure profile_image is loaded
+            $userModel = new User();
+            $freshUserData = $userModel->findById($user['id']);
+            if ($freshUserData) {
+                $user = $freshUserData;
+                // Update session with fresh data
+                Auth::updateSession($user);
+            }
+            
+            $applicationModel = new Application();
+
+            // Get application statistics
+            $stats = [
+                'total_applications' => $applicationModel->getCountByUserId($user['id']),
+                'pending_applications' => $applicationModel->getCountByUserIdAndStatus($user['id'], Application::STATUS_PENDING),
+                'accepted_applications' => $applicationModel->getCountByUserIdAndStatus($user['id'], Application::STATUS_ACCEPTED),
+                'rejected_applications' => $applicationModel->getCountByUserIdAndStatus($user['id'], Application::STATUS_REJECTED),
+            ];
+
+            // Get recent applications (limit 5)
+            $allApplications = $applicationModel->getByUserIdWithDetails($user['id']);
+            $recent_applications = array_slice($allApplications, 0, 5);
+
+            $this->view('front/profile/dashboard', [
+                'user' => $user,
+                'stats' => $stats,
+                'recent_applications' => $recent_applications,
+                'csrf_token' => Security::getToken(),
+                'page_type' => 'student'
+            ]);
+        }
+
+        public function updateProfile()
+        {
+            // Check if user is authenticated
+            if (!Auth::check()) {
+                header('Location: /login');
+                exit;
+            }
+
+            // Verify CSRF token
+            if (!Security::validateToken($_POST['csrf_token'] ?? '')) {
+                header('Location: /profile');
+                exit;
+            }
+
+            $user = Auth::user();
+            $userModel = new User();
+
+            // Prepare update data
+            $updateData = [
+                'name' => $_POST['name'] ?? $user['name'],
+                'email' => $_POST['email'] ?? $user['email'],
+                'speciality' => $_POST['speciality'] ?? $user['speciality'],
+                'promo' => $_POST['promo'] ?? $user['promo'],
+            ];
+
+            // Handle profile image upload
+            if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                $fileType = $_FILES['profile_image']['type'];
+                $fileSize = $_FILES['profile_image']['size'];
+                $maxSize = 2 * 1024 * 1024; // 2MB
+
+                if (!in_array($fileType, $allowedTypes)) {
+                    header('Location: /profile?error=invalid_image_type');
+                    exit;
+                }
+
+                if ($fileSize > $maxSize) {
+                    header('Location: /profile?error=image_too_large');
+                    exit;
+                }
+
+                // Create uploads directory if it doesn't exist
+                $uploadDir = __DIR__ . '/../../public/uploads/profiles/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
+                // Generate unique filename
+                $extension = pathinfo($_FILES['profile_image']['name'], PATHINFO_EXTENSION);
+                $filename = 'profile_' . $user['id'] . '_' . time() . '.' . $extension;
+                $destination = $uploadDir . $filename;
+
+                // Move uploaded file
+                if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $destination)) {
+                    // Delete old profile image if exists
+                    if ($user['profile_image'] && file_exists(__DIR__ . '/../../public/' . $user['profile_image'])) {
+                        unlink(__DIR__ . '/../../public/' . $user['profile_image']);
+                    }
+
+                    $updateData['profile_image'] = 'uploads/profiles/' . $filename;
+                } else {
+                    // File upload failed, but continue with other updates
+                    error_log('File upload failed. Destination: ' . $destination . ', Tmp: ' . $_FILES['profile_image']['tmp_name']);
+                }
+            }
+
+            // Update user in database
+            $userModel->update($user['id'], $updateData);
+
+            // Refresh session with updated data
+            Auth::updateSession($updateData);
+
+            // Redirect back to profile with success
+            header('Location: /profile?success=Profile updated successfully');
+            exit;
+        }
+
         public function applications()
         {
             // Check authentication
@@ -170,32 +290,35 @@
             }
             
             $user = Auth::user();
+            
+            // Get fresh user data from database to ensure profile_image is loaded
+            $userModel = new User();
+            $freshUserData = $userModel->findById($user['id']);
+            if ($freshUserData) {
+                $user = $freshUserData;
+                // Update session with fresh data
+                Auth::updateSession($user);
+            }
+            
             $applicationModel = new Application();
             
-            // Get user's applications with details
-            $applications = $applicationModel->getAllApplicationsWithDetails();
-            
-            // Filter applications for current user
-            $userApplications = array_filter($applications, function($app) use ($user) {
-                return $app['user_id'] == $user['id'];
-            });
-            
-            // Re-index array
-            $userApplications = array_values($userApplications);
+            // Get all applications for the current user with job details
+            $applications = $applicationModel->getByUserIdWithDetails($user['id']);
             
             if ($this->isAjaxRequest()) {
                 header('Content-Type: application/json');
                 echo json_encode([
                     'success' => true,
-                    'applications' => $userApplications
+                    'applications' => $applications
                 ]);
                 return;
             }
             
-            $this->view('front/profile/applications', [
-                'applications' => $userApplications,
+            $this->view('front/jobs/myapplication', [
+                'applications' => $applications,
                 'user' => $user,
-                'csrf_token' => Security::getToken()
+                'csrf_token' => Security::getToken(),
+                'page_type' => 'student'
             ]);
         }
 
